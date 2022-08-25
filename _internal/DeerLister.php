@@ -70,6 +70,18 @@ class DeerLister
             $directory .= '/';
         }
 
-        return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister", "directory" => $directory]);
+        $readme = null;
+        foreach ($files as $f)
+        {
+            if (strtoupper($f["name"]) === 'README.MD')
+            {
+                $readme = Parsedown::instance()
+                    ->setSafeMode(true)
+                    ->text(file_get_contents($directory . $f["name"]));
+                break;
+            }
+        }
+
+        return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister", "directory" => $directory, "readme" => $readme]);
     }
 }

@@ -1,6 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
+    {% if readme is not null %}
+        <div id="readme">
+            {{ readme | raw }}
+        </div>
+    {% endif %}
     <div class="flex-container">
         <div class="file-info">
             <div id="icon"></div>
