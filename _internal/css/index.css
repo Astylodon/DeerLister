@@ -34,15 +34,20 @@
     text-align: center;
 }
 
+#name {
+    flex: auto;
+}
+
 #size {
-    width: 50px;
+    width: 100px;
     margin-left: auto;
-    text-align: left;
+    text-align: right;
 }
 
 #last-modified {
     width: 250px;
     margin-left: auto;
+    text-align: right;
 }
 
 a {
