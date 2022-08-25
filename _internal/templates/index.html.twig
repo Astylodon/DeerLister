@@ -1,7 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block content %}
-    {% for file in files %}
-        <div>{{ file.name }} of size {{ file.size }}</div>
-    {% endfor %}
+    <div class="flex-container">
+        <div class="file-info">
+            <div id="icon"></div>
+            <div>Name</div>
+        </div>
+        {% for file in files %}
+            <div class="file-info">
+                <div id="icon"><i class="fa-solid {{ file.icon }}"></i></div>
+                <div>{{ file.name }}</div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

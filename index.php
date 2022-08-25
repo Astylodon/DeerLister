@@ -15,7 +15,7 @@ foreach (scandir(".") as $file)
 {
     if ($file !== '..' && $file != '.' && $file != '_internal')
     {
-        array_push($data, ['name' => $file, 'icon' => null, 'lastModified' => null, 'size' => filesize($file)]);
+        array_push($data, ['name' => $file, 'icon' => is_dir($file) ? 'fa-folder' : 'fa-file', 'lastModified' => null, 'size' => filesize($file)]);
     }
 }
 
