@@ -1,8 +1,9 @@
 <?php
 
+require_once 'Icons.php';
+
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
-require_once 'Icons.php';
 
 class DeerLister
 {
