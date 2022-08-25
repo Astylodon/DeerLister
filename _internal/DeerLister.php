@@ -60,7 +60,9 @@ class DeerLister
     {
         if (($files = $this->readDirectory($directory)) === false)
         {
-            return $this->twig->render("404.html.twig", ["title" => "Deer Lister"]);
+            http_response_code(404);
+
+            return $this->twig->render("404.html.twig", ["title" => "Not found"]);
         }
 
         return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister"]);
