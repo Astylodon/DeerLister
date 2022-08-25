@@ -10,6 +10,13 @@ $twig = new Environment($loader);
 
 $template = $twig->load('index.html.twig');
 
-$data = scandir(".");
+$data = [];
+foreach (scandir(".") as $file)
+{
+    if ($file !== '..' && $file != '.' && $file != '_internal')
+    {
+        array_push($data, ['name' => $file, 'icon' => null, 'lastModified' => null, 'size' => filesize($file)]);
+    }
+}
 
 echo $template->render(['files' => $data, 'title' => 'Deer Lister']);

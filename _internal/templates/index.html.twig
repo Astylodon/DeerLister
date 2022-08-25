@@ -2,6 +2,6 @@
 
 {% block content %}
     {% for file in files %}
-        <div>{{ file }}</div>
+        <div>{{ file.name }} of size {{ file.size }}</div>
     {% endfor %}
 {% endblock %}
