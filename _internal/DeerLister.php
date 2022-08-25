@@ -17,7 +17,7 @@ class DeerLister
         $this->twig = new Environment($loader);
     }
 
-    private function readDirectory(string $directory): array
+    private function readDirectory(string $directory): array|false
     {
         $base = getcwd();
         $path = realpath($base . "/" . $directory);
@@ -25,7 +25,12 @@ class DeerLister
         // make sure we are not accessing a folder outside the script root
         if ($path === false || strpos($path, $base) !== 0)
         {
-            return [];
+            return false;
+        }
+
+        if (!is_dir($path))
+        {
+            return false;
         }
 
         $files = [];
@@ -53,7 +58,10 @@ class DeerLister
 
     public function render(string $directory): string
     {
-        $files = $this->readDirectory($directory);
+        if (($files = $this->readDirectory($directory)) === false)
+        {
+            return $this->twig->render("404.html.twig", ["title" => "Deer Lister"]);
+        }
 
         return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister"]);
     }
