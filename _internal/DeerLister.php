@@ -50,7 +50,7 @@ class DeerLister
 
             $is_folder = is_dir($file);
 
-            array_push($files, ["name" => $name, "icon" => $is_folder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files, ["name" => $name, "isFolder" => $is_folder, "icon" => $is_folder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
         }
 
         return $files;
@@ -65,6 +65,11 @@ class DeerLister
             return $this->twig->render("404.html.twig", ["title" => "Not found"]);
         }
 
-        return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister"]);
+        if ($directory != '' && !str_ends_with($directory, '/') && !str_ends_with($directory, '\\'))
+        {
+            $directory .= '/';
+        }
+
+        return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister", "directory" => $directory]);
     }
 }
