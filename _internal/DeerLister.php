@@ -2,6 +2,7 @@
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+require_once 'Icons.php';
 
 class DeerLister
 {
@@ -13,14 +14,6 @@ class DeerLister
         $loader = new FilesystemLoader("_internal/templates");
 
         $this->twig = new Environment($loader);
-    }
-
-    private function getIcon(string $extension): string
-    {
-        switch ($extension)
-        {
-            default: return 'fa-file';
-        }
     }
 
     private function readDirectory(string $directory): array
@@ -36,7 +29,7 @@ class DeerLister
 
         $files = [];
 
-        // files to exluce, could array_merge with hidden files from a config
+        // files to exclude, could array_merge with hidden files from a config
         $exclude = ["..", ".", "_internal", "vendor"];
 
         foreach(scandir($path) as $name)
@@ -51,7 +44,7 @@ class DeerLister
 
             $is_folder = is_dir($file);
 
-            array_push($files, ["name" => $name, "icon" => $is_folder ? 'fa-folder' : $this->getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files, ["name" => $name, "icon" => $is_folder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
         }
 
         return $files;
