@@ -33,3 +33,12 @@
     width: 30px;
     text-align: center;
 }
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    background-color: lightgray;
+}
