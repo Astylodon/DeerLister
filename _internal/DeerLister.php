@@ -21,7 +21,7 @@ class DeerLister
         $path = realpath($base . "/" . $directory);
 
         // make sure we are not accessing a folder outside the script root
-        if ($path === false || strpos($path, $base))
+        if ($path === false || strpos($path, $base) !== 0)
         {
             return [];
         }
@@ -29,18 +29,19 @@ class DeerLister
         $files = [];
 
         // files to exluce, could array_merge with hidden files from a config
-        $exclude = ["..", "."];
+        $exclude = ["..", ".", "_internal", "vendor"];
 
-        foreach(scandir($path) as $file)
+        foreach(scandir($path) as $name)
         {
-            if (in_array($file, $exclude))
+            if (in_array($name, $exclude))
             {
                 continue;
             }
 
-            $modified = date("Y-m-d H:i");
+            $file = realpath($path . "/" . $name);
+            $modified = date("Y-m-d H:i", filemtime($file));
 
-            array_push($files, ["name" => basename($file), "icon" => null, "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files, ["name" => $name, "icon" => null, "lastModified" => $modified, "size" => filesize($file)]);
         }
 
         return $files;
