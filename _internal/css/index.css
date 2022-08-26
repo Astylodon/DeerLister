@@ -29,8 +29,21 @@
 #readme {
     width: 80vw;
     margin: auto;
-    padding: 1.5em;
-    border-radius: 5px;
+}
+
+#readme-header {
+    height: 40px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: 600;
+    font-size: 30px;
+    padding-left: .5em;
+}
+
+#readme-content {
+    padding: .5em 1.5em 1.5em 1.5em;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .flex-container {

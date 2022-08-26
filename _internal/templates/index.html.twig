@@ -11,7 +11,12 @@
 {% block content %}
     {% if readme is not null %}
         <div id="readme">
-            {{ readme | raw }}
+            <div id="readme-header">
+                README
+            </div>
+            <div id="readme-content">
+                {{ readme | raw }}
+            </div>
         </div>
     {% endif %}
     <div class="flex-container">

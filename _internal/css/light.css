@@ -1,4 +1,9 @@
-#readme {
+#readme-header {
+    background-color: royalblue;
+    color: white;
+}
+
+#readme-content {
     background-color: lightgray;
 }
 
