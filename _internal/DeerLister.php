@@ -172,7 +172,7 @@ class DeerLister
             $directory .= '/';
         }
 
-        $title = basename($directory); // TODO: If root folder, should display 'Home' or smth
+        $title = $directory == "" ? "Home" : basename($directory);
         $readme = null;
         foreach ($files as $f)
         {
