@@ -189,6 +189,11 @@ class DeerLister
             }
         }
 
+        // Because folders paths are in the format ./folder but base path is empty string
+        if ($directory === "")
+        {
+            $directory = ".";
+        }
         return $this->twig->render("index.html.twig",
             [
                 "files" => $files,

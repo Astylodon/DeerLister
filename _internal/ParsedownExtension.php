@@ -7,7 +7,6 @@ class ParsedownExtension extends Parsedown
 
     protected function blockHeader($line)
     {
-        var_dump($this->currLevel);
         $block = Parsedown::blockHeader($line);
 
         $level = (integer)trim($block['element']['name'], 'h');
