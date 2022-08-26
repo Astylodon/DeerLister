@@ -22,15 +22,7 @@
                     {% if file.isFolder %}
                         _
                     {%else%}
-                        {% if file.size >= 1000000 %}
-                            {{ file.size / 1000000 }}MB
-                        {%else%}
-                            {% if file.size >= 1000 %}
-                                {{ file.size / 1000 }}KB
-                            {%else%}
-                                {{ file.size }}B
-                            {% endif %}
-                        {% endif %}
+                        {{ file.size | humanFileSize }}
                     {% endif %}
                     </div>
                     <div id="last-modified">{{ file.lastModified }}</div>
