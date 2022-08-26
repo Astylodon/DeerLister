@@ -41,14 +41,24 @@ class DeerLister
             return false;
         }
 
-        $files = [];
+        if ($this->isHidden($directory))
+        {
+            return false;
+        }
 
-        // files to exclude, could array_merge with hidden files from a config
-        $exclude = ["..", ".", "_internal", "vendor"];
+        $files = [];
+        $exclude = ["..", "."];
 
         foreach(scandir($path) as $name)
         {
-            if (in_array($name, $exclude))
+            // exclude excludes and hide index.php for the root
+            if (in_array($name, $exclude) || ($name == "index.php" && $path == $base))
+            {
+                continue;
+            }
+
+            // check if file is hidden
+            if ($this->isHidden($name))
             {
                 continue;
             }
@@ -62,6 +72,23 @@ class DeerLister
         }
 
         return $files;
+    }
+
+    private function isHidden(string $path): bool
+    {
+        // files to hide, could array_merge with hidden files from a config
+        $hidden = ["_internal", "vendor"];
+
+        foreach ($hidden as $search)
+        {
+            if (strpos($path, $search) !== false)
+            {
+                print_r($search);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function render(string $directory): string
