@@ -1,8 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block banner %}
-{% for folder in path %}
-    <a href="{{ path | buildPath(loop.index0) }}">{{ folder }}</a> /
+{% for folder in path.exploded %}
+    <a href="{{ path.exploded | buildPath(loop.index0) }}">{{ folder }}</a> /
 {% endfor %}
 {% endblock %}
 
@@ -20,7 +20,7 @@
             <div id="last-modified">Last Modified</div>
         </div>
         {% for file in files %}
-            <a href="{{ file | getFilePath(directory) }}">
+            <a href="{{ file | getFilePath(path.full) }}">
                 <div class="file-info">
                     <div id="icon"><i class="{{ file.icon }}"></i></div>
                     <div id="name">{{ file.name }}</div>

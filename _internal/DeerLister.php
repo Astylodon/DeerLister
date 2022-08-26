@@ -41,15 +41,18 @@ class DeerLister
         }));
 
         // Build the path until the current index
-        $this->twig->addFilter(new TwigFilter("buildPath", function($pathArray, $index) {
+        $this->twig->addFilter(new TwigFilter("buildPath", function($pathArray, $index) : string
+        {
             $finalPath = "";
-            foreach (explode('/', $pathArray) as $index => $value)
+            foreach ($pathArray as $index => $value)
             {
+                $finalPath .= $value . '/';
                 if ($value === $index) {
                     break;
                 }
-                $finalPath .= $value . '/';
             }
+
+            return $finalPath;
         }));
     }
 
@@ -189,7 +192,7 @@ class DeerLister
             [
                 "files" => $files,
                 "title" => $title,
-                "directory" => $directory,
+                "path" => [ "full" => $directory, "exploded" => explode('/', $directory) ],
                 "readme" => $readme
             ]
         );
