@@ -50,7 +50,7 @@
     display: flex;
     flex-flow: column;
     width: 80vw;
-    margin: 0 auto;
+    margin: .5em auto 0 auto;
 }
 
 .file-info {
