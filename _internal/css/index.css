@@ -66,6 +66,10 @@
     color: black;
 }
 
-a:hover {
+.flex-container a:nth-child(odd) {
+    background-color: rgb(195, 227, 240);
+}
+
+.flex-container a:hover {
     background-color: lightgray;
 }
