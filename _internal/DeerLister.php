@@ -43,7 +43,7 @@ class DeerLister
         // Build the path until the current index
         $this->twig->addFilter(new TwigFilter("buildPath", function($pathArray, $index) {
             $finalPath = "";
-            foreach ($pathArray as $index => $value)
+            foreach (explode('/', $pathArray) as $index => $value)
             {
                 if ($value === $index) {
                     break;
@@ -117,8 +117,44 @@ class DeerLister
         return false;
     }
 
+    // From https://stackoverflow.com/a/2638272
+    function getRelativePath($from, $to)
+    {
+        // some compatibility fixes for Windows paths
+        $from = is_dir($from) ? rtrim($from, '\/') . '/' : $from;
+        $to   = is_dir($to)   ? rtrim($to, '\/') . '/'   : $to;
+        $from = str_replace('\\', '/', $from);
+        $to   = str_replace('\\', '/', $to);
+
+        $from     = explode('/', $from);
+        $to       = explode('/', $to);
+        $relPath  = $to;
+
+        foreach($from as $depth => $dir) {
+            // find first non-matching dir
+            if($dir === $to[$depth]) {
+                // ignore this directory
+                array_shift($relPath);
+            } else {
+                // get number of remaining dirs to $from
+                $remaining = count($from) - $depth;
+                if($remaining > 1) {
+                    // add traversals up to first matching dir
+                    $padLength = (count($relPath) + $remaining - 1) * -1;
+                    $relPath = array_pad($relPath, $padLength, '..');
+                    break;
+                } else {
+                    $relPath[0] = './' . $relPath[0];
+                }
+            }
+        }
+        return implode('/', $relPath);
+    }
+
     public function render(string $directory): string
     {
+        $directory = $this->getRelativePath(realpath("."), realpath($directory));
+
         if (($files = $this->readDirectory($directory)) === false)
         {
             http_response_code(404);
@@ -154,8 +190,7 @@ class DeerLister
                 "files" => $files,
                 "title" => $title,
                 "directory" => $directory,
-                "readme" => $readme,
-                "path" => array_filter(explode('/', $directory))
+                "readme" => $readme
             ]
         );
     }
