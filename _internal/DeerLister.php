@@ -83,7 +83,6 @@ class DeerLister
         {
             if (strpos($path, $search) !== false)
             {
-                print_r($search);
                 return true;
             }
         }
