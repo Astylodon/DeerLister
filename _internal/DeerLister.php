@@ -43,11 +43,12 @@ class DeerLister
         // Build the path until the current index
         $this->twig->addFilter(new TwigFilter("buildPath", function($pathArray, $index) : string
         {
-            $finalPath = "";
-            foreach ($pathArray as $index => $value)
+            $finalPath = "?dir=";
+            foreach ($pathArray as $i => $value)
             {
                 $finalPath .= $value . '/';
-                if ($value === $index) {
+                if ($i === $index)
+                {
                     break;
                 }
             }
@@ -192,7 +193,7 @@ class DeerLister
             [
                 "files" => $files,
                 "title" => $title,
-                "path" => [ "full" => $directory, "exploded" => explode('/', $directory) ],
+                "path" => [ "full" => $directory, "exploded" => array_filter(explode('/', $directory)) ],
                 "readme" => $readme
             ]
         );
