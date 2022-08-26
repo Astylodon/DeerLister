@@ -17,11 +17,26 @@ class DeerLister
 
         $this->twig = new Environment($loader);
 
+        // Convert a size in byte to something more diggest
         $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
             $units = ["B", "KB", "MB", "GB"];
             for ($i = 0; $size > 1024; $i++) $size /= 1024;
 
             return round($size, 2) . $units[$i];
+        }));
+
+        // Get the file where the user with be led from the current element
+        $this->twig->addFilter(new TwigFilter("getFilePath", function($file, $directory) {
+            if ($file["name"] === "..")
+            {
+                return "?dir=" . dirname(dirname($directory . $file["name"]));
+            }
+            $path = "";
+            if ($file["isFolder"])
+            {
+                $path .= "?dir=";
+            }
+            return $path . $directory . $file["name"];
         }));
     }
 
@@ -47,12 +62,11 @@ class DeerLister
         }
 
         $files = [];
-        $exclude = ["..", "."];
 
         foreach(scandir($path) as $name)
         {
             // exclude excludes and hide index.php for the root
-            if (in_array($name, $exclude) || ($name == "index.php" && $path == $base))
+            if ($name === '.' || (($name === "index.php" || $name === "..") && $path === $base))
             {
                 continue;
             }
