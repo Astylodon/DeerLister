@@ -4,6 +4,7 @@ require_once 'Icons.php';
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
+use Twig\TwigFilter;
 
 class DeerLister
 {
@@ -15,6 +16,13 @@ class DeerLister
         $loader = new FilesystemLoader("_internal/templates");
 
         $this->twig = new Environment($loader);
+
+        $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
+            $units = ["B", "KB", "MB", "GB"];
+            for ($i = 0; $size > 1024; $i++) $size /= 1024;
+
+            return round($size, 2) . $units[$i];
+        }));
     }
 
     private function readDirectory(string $directory): array|false
