@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block banner %}
+{% for folder in path %}
+    <a href="{{ path | buildPath(loop.index0) }}">{{ folder }}</a> /
+{% endfor %}
+{% endblock %}
+
 {% block content %}
     {% if readme is not null %}
         <div id="readme">

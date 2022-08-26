@@ -6,7 +6,9 @@
         <link rel="stylesheet" type="text/css" href="_internal/css/index.css">
     </head>
     <body>
-        <div id="banner"></div>
+        <div id="banner">
+            {% block banner %}{% endblock %}
+        </div>
         <div id="content">
             {% block content %}{% endblock %}
         </div>

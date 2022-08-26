@@ -39,6 +39,18 @@ class DeerLister
             }
             return $path . $directory . $file["name"];
         }));
+
+        // Build the path until the current index
+        $this->twig->addFilter(new TwigFilter("buildPath", function($pathArray, $index) {
+            $finalPath = "";
+            foreach ($pathArray as $index => $value)
+            {
+                if ($value === $index) {
+                    break;
+                }
+                $finalPath .= $value . '/';
+            }
+        }));
     }
 
     private function readDirectory(string $directory): array|false
@@ -114,7 +126,8 @@ class DeerLister
             return $this->twig->render("404.html.twig", ["title" => "Not found"]);
         }
 
-        if ($directory != '' && !str_ends_with($directory, '/') && !str_ends_with($directory, '\\'))
+        $directory = str_replace('\\', '/', $directory);
+        if ($directory != '' && !str_ends_with($directory, '/'))
         {
             $directory .= '/';
         }
@@ -136,6 +149,14 @@ class DeerLister
             }
         }
 
-        return $this->twig->render("index.html.twig", ["files" => $files, "title" => $title, "directory" => $directory, "readme" => $readme]);
+        return $this->twig->render("index.html.twig",
+            [
+                "files" => $files,
+                "title" => $title,
+                "directory" => $directory,
+                "readme" => $readme,
+                "path" => array_filter(explode('/', $directory))
+            ]
+        );
     }
 }
