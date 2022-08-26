@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
 {% block banner %}
-{% for folder in path.exploded %}
-    <a href="{{ path.exploded | buildPath(loop.index0) }}">{{ folder == '.' ? 'Home' : folder }}</a> /
-{% endfor %}
+<div id="path">
+    {% for folder in path.exploded %}
+        <a href="{{ path.exploded | buildPath(loop.index0) }}">{{ folder == '.' ? 'Home' : folder }}</a> /
+    {% endfor %}
+</div>
 {% endblock %}
 
 {% block content %}

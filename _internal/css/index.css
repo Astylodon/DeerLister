@@ -5,6 +5,22 @@
     width: 100%;
     height: 100px;
     background-color: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#path {
+    width: 80vw;
+}
+
+#path a {
+    text-decoration: none;
+    color: black;
+}
+
+#path a:hover {
+    text-decoration: underline;
 }
 
 #content {
