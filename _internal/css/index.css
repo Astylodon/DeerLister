@@ -4,7 +4,6 @@
     left: 0;
     width: 100%;
     height: 100px;
-    background-color: lightblue;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,7 +29,6 @@
 #readme {
     width: 80vw;
     margin: auto;
-    background-color: lightgray;
     padding: 1.5em;
     border-radius: 5px;
 }
@@ -80,12 +78,4 @@
 .flex-container a {
     text-decoration: none;
     color: black;
-}
-
-.flex-container a:nth-child(odd) {
-    background-color: rgb(195, 227, 240);
-}
-
-.flex-container a:hover {
-    background-color: lightgray;
 }

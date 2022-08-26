@@ -1,0 +1,15 @@
+#readme {
+    background-color: lightgray;
+}
+
+#banner {
+    background-color: lightblue;
+}
+
+.flex-container a:nth-child(odd) {
+    background-color: lightblue;
+}
+
+.flex-container a:hover {
+    background-color: lightgray;
+}
