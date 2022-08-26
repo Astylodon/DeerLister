@@ -57,7 +57,7 @@
     text-align: right;
 }
 
-a {
+.flex-container a {
     text-decoration: none;
     color: black;
 }
