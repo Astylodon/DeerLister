@@ -37,7 +37,7 @@ class DeerLister
             {
                 $path .= "?dir=";
             }
-            return $path . $directory . $file["name"];
+            return $path . $directory . (str_ends_with($directory, '/') ? '' : '/') . $file["name"];
         }));
 
         // Build the path until the current index
