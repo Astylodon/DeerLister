@@ -1,4 +1,4 @@
-# DeerLister
+# Deer Lister
 PHP directory lister 🦌
 
 ## Requirements

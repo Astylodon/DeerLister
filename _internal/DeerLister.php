@@ -1,6 +1,7 @@
 <?php
 
 require_once 'Icons.php';
+require_once 'ParsedownExtension.php';
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -118,18 +119,23 @@ class DeerLister
             $directory .= '/';
         }
 
+        $title = "Deer Lister";
         $readme = null;
         foreach ($files as $f)
         {
             if (strtoupper($f["name"]) === 'README.MD')
             {
-                $readme = Parsedown::instance()
-                    ->setSafeMode(true)
-                    ->text(file_get_contents($directory . $f["name"]));
+                $parsedown = new ParsedownExtension();
+                $parsedown->setSafeMode(true);
+                $readme = $parsedown->text(file_get_contents($directory . $f["name"]));
+                if ($parsedown->getTitle() !== null)
+                {
+                    $title = $parsedown->getTitle();
+                }
                 break;
             }
         }
 
-        return $this->twig->render("index.html.twig", ["files" => $files, "title" => "Deer Lister", "directory" => $directory, "readme" => $readme]);
+        return $this->twig->render("index.html.twig", ["files" => $files, "title" => $title, "directory" => $directory, "readme" => $readme]);
     }
 }
