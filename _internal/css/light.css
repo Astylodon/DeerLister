@@ -8,7 +8,12 @@
 }
 
 #banner {
-    background-color: lightblue;
+    background-color: royalblue;
+    color: white;
+}
+
+#path a {
+    color: white;
 }
 
 .flex-container a:nth-child(odd) {
