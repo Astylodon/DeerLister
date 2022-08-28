@@ -60,6 +60,8 @@
     margin: .1em;
     height: 40px;
     font-size: 20px;
+    display: flex;
+    align-items: center;
 }
 
 .header {
@@ -68,7 +70,7 @@
 
 #icon {
     width: 30px;
-    text-align: center;
+    justify-content: center;
 }
 
 #name {
