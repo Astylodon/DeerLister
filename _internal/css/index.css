@@ -64,6 +64,18 @@
     align-items: center;
 }
 
+@media (max-width: 750px) {
+    #last-modified {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    #size {
+        display: none;
+    }
+}
+
 .header {
     font-weight: 600;
 }
