@@ -1,22 +1,55 @@
 #banner {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100px;
-    background-color: lightblue;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#path {
+    width: 80vw;
+}
+
+#path a {
+    text-decoration: none;
+}
+
+#path a:hover {
+    text-decoration: underline;
 }
 
 #content {
-    margin-top: 100px;
+    margin-top: 110px;
+}
+
+#readme {
+    width: 80vw;
+    margin: auto;
+}
+
+#readme-header {
+    height: 40px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    font-weight: 600;
+    font-size: 30px;
+    padding-left: .5em;
+}
+
+#readme-content {
+    padding: .5em 1.5em 1.5em 1.5em;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
 }
 
 .flex-container {
     display: flex;
     flex-flow: column;
     width: 80vw;
-    margin: 0 auto;
-    margin-top: 8em;
+    margin: .5em auto 0 auto;
 }
 
 .file-info {
@@ -27,9 +60,48 @@
     margin: .1em;
     height: 40px;
     font-size: 20px;
+    display: flex;
+    align-items: center;
+}
+
+@media (max-width: 750px) {
+    #last-modified {
+        display: none;
+    }
+}
+
+@media (max-width: 500px) {
+    #size {
+        display: none;
+    }
+}
+
+.header {
+    font-weight: 600;
 }
 
 #icon {
     width: 30px;
-    text-align: center;
+    justify-content: center;
+}
+
+#name {
+    flex: auto;
+}
+
+#size {
+    width: 100px;
+    margin-left: auto;
+    text-align: right;
+}
+
+#last-modified {
+    width: 250px;
+    margin-left: auto;
+    text-align: right;
+}
+
+.flex-container a {
+    text-decoration: none;
+    color: black;
 }

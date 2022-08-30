@@ -1,5 +1,9 @@
 {
+    "name": "xwilarg/deerlister",
+    "description": "PHP directory lister 🦌",
+    "license": "MIT",
     "require": {
-        "twig/twig": "^3.0"
+        "twig/twig": "^3.0",
+        "erusev/parsedown": "^1.7"
     }
 }

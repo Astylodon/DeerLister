@@ -1,0 +1,25 @@
+#readme-header {
+    background-color: royalblue;
+    color: white;
+}
+
+#readme-content {
+    background-color: lightgray;
+}
+
+#banner {
+    background-color: royalblue;
+    color: white;
+}
+
+#path a {
+    color: white;
+}
+
+.flex-container a:nth-child(odd) {
+    background-color: lightblue;
+}
+
+.flex-container a:hover {
+    background-color: lightgray;
+}

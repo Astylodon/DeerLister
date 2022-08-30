@@ -1,16 +1,48 @@
 {% extends 'base.html.twig' %}
 
+{% block banner %}
+<div id="path">
+    <a href="/">Home</a> /
+
+    {% for folder in path.exploded %}
+        <a href="{{ path.exploded | buildPath(loop.index0) }}">{{ folder }}</a> /
+    {% endfor %}
+</div>
+{% endblock %}
+
 {% block content %}
+    {% if readme is not null %}
+        <div id="readme">
+            <div id="readme-header">
+                README
+            </div>
+            <div id="readme-content">
+                {{ readme | raw }}
+            </div>
+        </div>
+    {% endif %}
     <div class="flex-container">
-        <div class="file-info">
+        <div class="file-info header">
             <div id="icon"></div>
-            <div>Name</div>
+            <div id="name">Name</div>
+            <div id="size">Size</div>
+            <div id="last-modified">Last Modified</div>
         </div>
         {% for file in files %}
-            <div class="file-info">
-                <div id="icon"><i class="{{ file.icon }}"></i></div>
-                <div>{{ file.name }}</div>
-            </div>
+            <a href="{{ file | getFilePath(path.full) }}">
+                <div class="file-info">
+                    <div id="icon"><i class="{{ file.icon }}"></i></div>
+                    <div id="name">{{ file.name }}</div>
+                    <div id="size">
+                    {% if file.isFolder %}
+                        _
+                    {%else%}
+                        {{ file.size | humanFileSize }}
+                    {% endif %}
+                    </div>
+                    <div id="last-modified">{{ file.lastModified }}</div>
+                </div>
+            </a>
         {% endfor %}
     </div>
 {% endblock %}

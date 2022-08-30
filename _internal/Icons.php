@@ -41,7 +41,7 @@ class Icons
         }
         if (array_key_exists($extension, Icons::$solids))
         {
-            return 'fa-solid ' . Icons::$brands[$extension];
+            return 'fa-solid ' . Icons::$solids[$extension];
         }
         return 'fa-solid fa-file';
     }
