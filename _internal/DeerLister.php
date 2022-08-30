@@ -57,6 +57,17 @@ class DeerLister
         }));
     }
 
+    private function filesCmp($a, $b): int
+    {
+        if ($a["isFolder"] && $b["isFolder"]) {
+            return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
+        }
+        if ($a["isFolder"]) {
+            return 1;
+        }
+        return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
+    }
+
     private function readDirectory(string $directory): array|false
     {
         $base = getcwd();
@@ -102,6 +113,7 @@ class DeerLister
             array_push($files, ["name" => $name, "isFolder" => $is_folder, "icon" => $is_folder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
         }
 
+        usort($files, array($this, "filesCmp"));
         return $files;
     }
 
