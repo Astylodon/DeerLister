@@ -2,8 +2,10 @@
 
 {% block banner %}
 <div id="path">
+    <a href="/">Home</a> /
+
     {% for folder in path.exploded %}
-        <a href="{{ path.exploded | buildPath(loop.index0) }}">{{ folder == '.' ? 'Home' : folder }}</a> /
+        <a href="{{ path.exploded | buildPath(loop.index0) }}">{{ folder }}</a> /
     {% endfor %}
 </div>
 {% endblock %}

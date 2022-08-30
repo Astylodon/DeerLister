@@ -30,20 +30,22 @@ class DeerLister
         $this->twig->addFilter(new TwigFilter("getFilePath", function($file, $directory) {
             if ($file["name"] === "..")
             {
-                return "?dir=" . dirname(dirname($directory . $file["name"]));
+                $path = $this->getRelativePath($directory . "/..");
+
+                // don't create an url with ?dir if we are returning to root
+                return $path == "" ? "/" : "?dir=" . $path;
             }
-            $path = "";
-            if ($file["isFolder"])
-            {
-                $path .= "?dir=";
-            }
-            return $path . $directory . (str_ends_with($directory, '/') ? '' : '/') . $file["name"];
+
+            $path = $file["isFolder"] ? "?dir=" : "/";
+            
+            return $path . $directory . ($directory == '' || str_ends_with($directory, '/') ? '' : '/') . $file["name"];
         }));
 
         // Build the path until the current index
         $this->twig->addFilter(new TwigFilter("buildPath", function($pathArray, $index) : string
         {
             $finalPath = "?dir=";
+
             foreach ($pathArray as $i => $value)
             {
                 $finalPath .= $value . '/';
@@ -93,7 +95,7 @@ class DeerLister
 
         foreach(scandir($path) as $name)
         {
-            // exclude excludes and hide index.php for the root
+            // exclude current directory and index.php or parent for the root directory
             if ($name === '.' || (($name === "index.php" || $name === "..") && $path === $base))
             {
                 continue;
@@ -108,9 +110,9 @@ class DeerLister
             $file = realpath($path . "/" . $name);
             $modified = date("Y-m-d H:i", filemtime($file));
 
-            $is_folder = is_dir($file);
+            $isFolder = is_dir($file);
 
-            array_push($files, ["name" => $name, "isFolder" => $is_folder, "icon" => $is_folder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files, ["name" => $name, "isFolder" => $isFolder, "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
         }
 
         usort($files, array($this, "filesCmp"));
@@ -133,44 +135,17 @@ class DeerLister
         return false;
     }
 
-    // From https://stackoverflow.com/a/2638272
-    function getRelativePath($from, $to)
+    private function getRelativePath(string $directory): string
     {
-        // some compatibility fixes for Windows paths
-        $from = is_dir($from) ? rtrim($from, '\/') . '/' : $from;
-        $to   = is_dir($to)   ? rtrim($to, '\/') . '/'   : $to;
-        $from = str_replace('\\', '/', $from);
-        $to   = str_replace('\\', '/', $to);
-
-        $from     = explode('/', $from);
-        $to       = explode('/', $to);
-        $relPath  = $to;
-
-        foreach($from as $depth => $dir) {
-            // find first non-matching dir
-            if($dir === $to[$depth]) {
-                // ignore this directory
-                array_shift($relPath);
-            } else {
-                // get number of remaining dirs to $from
-                $remaining = count($from) - $depth;
-                if($remaining > 1) {
-                    // add traversals up to first matching dir
-                    $padLength = (count($relPath) + $remaining - 1) * -1;
-                    $relPath = array_pad($relPath, $padLength, '..');
-                    break;
-                } else {
-                    $relPath[0] = './' . $relPath[0];
-                }
-            }
-        }
-        return implode('/', $relPath);
+        $base = getcwd();
+        $path = realpath($base . "/" . $directory);
+        
+        return strtr(substr($path, strlen($base) + 1), DIRECTORY_SEPARATOR, "/");
     }
 
     public function render(string $directory): string
     {
-        $directory = $this->getRelativePath(realpath("."), realpath($directory));
-
+        // read the directory
         if (($files = $this->readDirectory($directory)) === false)
         {
             http_response_code(404);
@@ -178,13 +153,10 @@ class DeerLister
             return $this->twig->render("404.html.twig", ["title" => "Not found"]);
         }
 
-        $directory = str_replace('\\', '/', $directory);
-        if ($directory != '' && !str_ends_with($directory, '/'))
-        {
-            $directory .= '/';
-        }
+        // relative real path
+        $path = $this->getRelativePath($directory);
 
-        $title = $directory == "" ? "Home" : basename($directory);
+        $title = $path == "" ? "Home" : basename($directory);
         $readme = null;
         foreach ($files as $f)
         {
@@ -200,17 +172,12 @@ class DeerLister
                 break;
             }
         }
-
-        // Because folders paths are in the format ./folder but base path is empty string
-        if ($directory === "")
-        {
-            $directory = ".";
-        }
+        
         return $this->twig->render("index.html.twig",
             [
                 "files" => $files,
                 "title" => $title,
-                "path" => [ "full" => $directory, "exploded" => array_filter(explode('/', $directory)) ],
+                "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
                 "readme" => $readme
             ]
         );
