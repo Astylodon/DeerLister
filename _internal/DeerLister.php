@@ -59,14 +59,18 @@ class DeerLister
         }));
     }
 
-    private function filesCmp($a, $b): int
+    private function filesCmp(array $a, array $b): int
     {
-        if ($a["isFolder"] && $b["isFolder"]) {
+        if ($a["isFolder"] && $b["isFolder"])
+        {
             return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
         }
-        if ($a["isFolder"]) {
+
+        if ($b["isFolder"])
+        {
             return 1;
         }
+
         return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
     }
 
