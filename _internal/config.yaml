@@ -1,0 +1,4 @@
+## Hide folders from DeerLister
+hidden:
+  - _internal
+  - vendor
