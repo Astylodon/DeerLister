@@ -12,4 +12,4 @@ PHP >= 8.0
 
 This code is licensed under the MIT License.
 
-`deer.png` is licensed by Twitter under CC-BY 4.0.
+`deer.png` is licensed [by Twitter under CC-BY 4.0](https://github.com/twitter/twemoji#license).
