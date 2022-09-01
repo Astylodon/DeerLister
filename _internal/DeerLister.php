@@ -186,7 +186,7 @@ class DeerLister
             {
                 $parsedown = new ParsedownExtension();
                 $parsedown->setSafeMode(true);
-                $readme = $parsedown->text(file_get_contents($directory . $f["name"]));
+                $readme = $parsedown->text(file_get_contents($directory . "/" . $f["name"]));
                 if ($parsedown->getTitle() !== null)
                 {
                     $title = $parsedown->getTitle();
