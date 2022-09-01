@@ -90,7 +90,7 @@ class DeerLister
             return false;
         }
 
-        if ($this->isHidden($directory, $config))
+        if ($this->isHidden($directory, $config, true))
         {
             return false;
         }
@@ -106,7 +106,7 @@ class DeerLister
             }
 
             // check if file is hidden
-            if ($this->isHidden($name, $config))
+            if ($this->isHidden($name, $config, false))
             {
                 continue;
             }
@@ -123,10 +123,26 @@ class DeerLister
         return $files;
     }
 
-    private function isHidden(string $path, mixed $config): bool
+    /// Returns if a file/folder should be displayed or not
+    ///
+    /// @param path: Path to the file/folder
+    /// @param config: config.yaml file
+    /// @param ignoreHide: Do we only consider forbidden files (true) or also hidden ones (false)
+    private function isHidden(string $path, mixed $config, bool $ignoreHide): bool
     {
         // files to hide, could array_merge with hidden files from a config
-        $hidden = array_key_exists("hidden", $config) ? $config["hidden"] : ["_internal", "vendor"];
+        if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
+        {
+            $hidden = $config["forbidden"];
+        }
+        else
+        {
+            $hidden = ["_internal", "vendor"];
+        }
+        if (!$ignoreHide && array_key_exists("hidden", $config) && $config["hidden"] !== NULL)
+        {
+            $hidden = [...$hidden, ...$config["hidden"]];
+        }
 
         foreach ($hidden as $search)
         {

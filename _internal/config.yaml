@@ -1,4 +1,7 @@
-## Hide folders from DeerLister
-hidden:
+## Prevent user to see and access files and folder
+forbidden:
   - _internal
   - vendor
+
+## Hide a folder from the user but doesn't prevent access
+hidden:
