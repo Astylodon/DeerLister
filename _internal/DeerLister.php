@@ -126,7 +126,7 @@ class DeerLister
     private function isHidden(string $path, mixed $config): bool
     {
         // files to hide, could array_merge with hidden files from a config
-        $hidden = array_key_exists("hidden", $config) ? $config["hidden"] : [];
+        $hidden = array_key_exists("hidden", $config) ? $config["hidden"] : ["_internal", "vendor"];
 
         foreach ($hidden as $search)
         {
