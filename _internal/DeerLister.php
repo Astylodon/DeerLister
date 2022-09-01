@@ -123,11 +123,13 @@ class DeerLister
         return $files;
     }
 
-    /// Returns if a file/folder should be displayed or not
-    ///
-    /// @param path: Path to the file/folder
-    /// @param config: config.yaml file
-    /// @param ignoreHide: Do we only consider forbidden files (true) or also hidden ones (false)
+    /**
+     * Returns if a file/folder should be displayed or not
+     *
+     * @param string $path Path to the file/folder
+     * @param mixed $config config.yaml file
+     * @param bool $ignoreHide Do we only consider forbidden files (true) or also hidden ones (false)
+    */
     private function isHidden(string $path, mixed $config, bool $ignoreHide): bool
     {
         // files to hide, could array_merge with hidden files from a config
