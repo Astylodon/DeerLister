@@ -132,7 +132,6 @@ class DeerLister
     */
     private function isHidden(string $path, mixed $config, bool $ignoreHide): bool
     {
-        // files to hide, could array_merge with hidden files from a config
         if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
         {
             $hidden = $config["forbidden"];
