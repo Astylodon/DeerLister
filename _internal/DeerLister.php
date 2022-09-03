@@ -74,7 +74,7 @@ class DeerLister
         return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
     }
 
-    private function readDirectory(string $directory): array|false
+    private function readDirectory(string $directory, mixed $config): array|false
     {
         $base = getcwd();
         $path = realpath($base . "/" . $directory);
@@ -90,7 +90,7 @@ class DeerLister
             return false;
         }
 
-        if ($this->isHidden($directory))
+        if ($this->isHidden($directory, $config, true))
         {
             return false;
         }
@@ -106,7 +106,7 @@ class DeerLister
             }
 
             // check if file is hidden
-            if ($this->isHidden($name))
+            if ($this->isHidden($name, $config, false))
             {
                 continue;
             }
@@ -123,10 +123,27 @@ class DeerLister
         return $files;
     }
 
-    private function isHidden(string $path): bool
+    /**
+     * Returns if a file/folder should be displayed or not
+     *
+     * @param string $path Path to the file/folder
+     * @param mixed $config config.yaml file
+     * @param bool $ignoreHide Do we only consider forbidden files (true) or also hidden ones (false)
+    */
+    private function isHidden(string $path, mixed $config, bool $ignoreHide): bool
     {
-        // files to hide, could array_merge with hidden files from a config
-        $hidden = ["_internal", "vendor"];
+        if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
+        {
+            $hidden = $config["forbidden"];
+        }
+        else
+        {
+            $hidden = ["_internal", "vendor"];
+        }
+        if (!$ignoreHide && array_key_exists("hidden", $config) && $config["hidden"] !== NULL)
+        {
+            $hidden = [...$hidden, ...$config["hidden"]];
+        }
 
         foreach ($hidden as $search)
         {
@@ -149,8 +166,10 @@ class DeerLister
 
     public function render(string $directory): string
     {
+        $config = in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml") ? yaml_parse(file_get_contents("_internal/config.yaml")) : [];
+
         // read the directory
-        if (($files = $this->readDirectory($directory)) === false)
+        if (($files = $this->readDirectory($directory, $config)) === false)
         {
             http_response_code(404);
 
