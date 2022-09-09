@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Icons.php';
-require_once 'ParsedownExtension.php';
+require_once "Icons.php";
+require_once "ParsedownExtension.php";
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -185,9 +185,11 @@ class DeerLister
         {
             if (strtoupper($f["name"]) === 'README.MD')
             {
+                $content = file_get_contents(($directory == "" ? "" : $directory . "/") . $f["name"]);
+
                 $parsedown = new ParsedownExtension();
                 $parsedown->setSafeMode(true);
-                $readme = $parsedown->text(file_get_contents($directory . "/" . $f["name"]));
+                $readme = $parsedown->text($content);
                 if ($parsedown->getTitle() !== null)
                 {
                     $title = $parsedown->getTitle();
