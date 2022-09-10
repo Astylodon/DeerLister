@@ -1,0 +1,5 @@
+{% if isVideo %}
+    <video src="{{ path }}" controls style="width: 100%;">
+{% else %}
+    <img src="{{ path }}" style="max-width: 100%;">
+{% endif %}

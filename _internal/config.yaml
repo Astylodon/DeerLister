@@ -5,3 +5,8 @@ forbidden:
 
 ## Hide a folder from the user but doesn't prevent access
 hidden:
+
+## List of enabled file previews
+previews:
+  - media
+  - code

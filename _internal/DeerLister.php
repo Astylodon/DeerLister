@@ -10,9 +10,12 @@ use Twig\TwigFilter;
 class DeerLister
 {
     private Environment $twig;
+    private array $filePreviews;
 
     function __construct()
     {
+        $this->filePreviews = [];
+
         // setup twig
         $loader = new FilesystemLoader("_internal/templates");
 
@@ -164,6 +167,13 @@ class DeerLister
         return strtr(substr($path, strlen($base) + 1), DIRECTORY_SEPARATOR, "/");
     }
 
+    public function registerFilePreview(string $name, FilePreview $instance)
+    {
+        // TODO should be checked if name is enabled in config
+
+        array_push($this->filePreviews, $instance);
+    }
+
     public function render(string $directory): string
     {
         $config = in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml") ? yaml_parse(file_get_contents("_internal/config.yaml")) : [];
@@ -206,5 +216,35 @@ class DeerLister
                 "readme" => $readme
             ]
         );
+    }
+
+    public function getFilePreview(string $file): string
+    {
+        // make sure we are not accessing files outside web root
+        // path passed to any file preview should already be safe
+        $base = getcwd();
+        $path = realpath($base . "/" . $file);
+
+        if ($path === false || strpos($path, $base) !== 0)
+        {
+            http_response_code(404);
+
+            return "File could not be previewed";
+        }
+
+        // TODO check config forbidden
+
+        foreach ($this->filePreviews as $preview)
+        {
+            $filename = pathinfo($file, PATHINFO_BASENAME);
+
+            if ($preview->doesHandle($filename))
+            {
+                return $preview->renderPreview($file, $this->twig);
+            }
+        }
+
+        http_response_code(404);
+        return "File could not be previewed";
     }
 }
