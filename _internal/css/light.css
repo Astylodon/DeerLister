@@ -7,12 +7,12 @@
     background-color: lightgray;
 }
 
-#banner {
+.banner {
     background-color: royalblue;
     color: white;
 }
 
-#path a {
+.path a {
     color: white;
 }
 

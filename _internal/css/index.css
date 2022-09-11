@@ -2,7 +2,7 @@ body {
     font-family: Verdana;
 }
 
-#banner {
+.banner {
     position: fixed;
     top: 0;
     left: 0;
@@ -13,19 +13,19 @@ body {
     justify-content: center;
 }
 
-#path {
+.path {
     width: 80vw;
 }
 
-#path a {
+.path a {
     text-decoration: none;
 }
 
-#path a:hover {
+.path a:hover {
     text-decoration: underline;
 }
 
-#content {
+.content {
     margin-top: 110px;
 }
 
@@ -69,13 +69,13 @@ body {
 }
 
 @media (max-width: 750px) {
-    #last-modified {
+    .file-info .last-modified {
         display: none;
     }
 }
 
 @media (max-width: 500px) {
-    #size {
+    .file-info .size {
         display: none;
     }
 }
@@ -84,22 +84,22 @@ body {
     font-weight: 600;
 }
 
-#icon {
+.file-info .icon {
     width: 30px;
     justify-content: center;
 }
 
-#name {
+.file-info .name {
     flex: auto;
 }
 
-#size {
+.file-info .size {
     width: 100px;
     margin-left: auto;
     text-align: right;
 }
 
-#last-modified {
+.file-info .last-modified {
     width: 250px;
     margin-left: auto;
     text-align: right;
