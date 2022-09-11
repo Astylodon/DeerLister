@@ -142,4 +142,5 @@ body {
 .codeblock {
     padding: 1em;
     border-radius: 5px;
+    font-family: Consolas;
 }

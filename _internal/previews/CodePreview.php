@@ -7,12 +7,25 @@ require_once "FilePreview.php";
  */
 class CodePreview implements FilePreview
 {
-    public function doesHandle(string $filename): bool
-    {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+    const EXTENSIONS =
+        [
+            "txt", "js", "css", "xml", "json", "toml",
+            "yaml", "cs", "c", "cpp", "sh", "ps1", "bat",
+            "py", "rs", "ts", "lua", "java", "go", "csproj",
+            "kt", "sql", "dart", "rb", "asm", "vba", "fs",
+            "hs", "patch", "map", "def", "bt", "log"
+        ];
 
-        // couple examples
-        return in_array($ext, ["txt", "js", "css", "cs", "c", "cpp", "py", "sh", "bat", "ps1", "go", "yml", "json"]);
+    const UNSAFE_EXTENSIONS =
+        [
+            "php"
+        ];
+
+    public function doesHandle(string $filename, string $ext): bool
+    {
+        // TODO allow previews to have a config section and check for unsafe
+
+        return in_array($ext, self::EXTENSIONS);
     }
 
     public function renderPreview(string $path, Twig\Environment $twig): string

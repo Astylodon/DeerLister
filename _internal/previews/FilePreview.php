@@ -6,10 +6,11 @@ interface FilePreview
      * Whether the current file preview handles this file
      * 
      * @param string $filename The name of the file
+     * @param string $ext The file extension without leading dot
      * 
      * @return bool Whether the file preview handles the file
      */
-    public function doesHandle(string $filename): bool;
+    public function doesHandle(string $filename, string $ext): bool;
 
     /**
      * Render the file preview content

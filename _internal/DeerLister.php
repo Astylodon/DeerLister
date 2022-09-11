@@ -208,9 +208,11 @@ class DeerLister
      */
     private function isFilePreviewable(string $filename): bool
     {
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
         foreach ($this->filePreviews as $preview)
         {
-            if ($preview->doesHandle($filename))
+            if ($preview->doesHandle($filename, $ext))
             {
                 return true;
             }
@@ -294,11 +296,12 @@ class DeerLister
 
         // TODO check config forbidden
 
+        $filename = pathinfo($file, PATHINFO_BASENAME);
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+
         foreach ($this->filePreviews as $preview)
         {
-            $filename = pathinfo($file, PATHINFO_BASENAME);
-
-            if ($preview->doesHandle($filename))
+            if ($preview->doesHandle($filename, $ext))
             {
                 return $preview->renderPreview($file, $this->twig);
             }

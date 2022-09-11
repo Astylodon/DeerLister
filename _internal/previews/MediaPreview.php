@@ -7,10 +7,8 @@ require_once "FilePreview.php";
  */
 class MediaPreview implements FilePreview
 {
-    public function doesHandle(string $filename): bool
+    public function doesHandle(string $filename, string $ext): bool
     {
-        $ext = pathinfo($filename, PATHINFO_EXTENSION);
-
         return in_array($ext, ["png", "jpg", "jpeg", "gif", "mp4"]);
     }
 
