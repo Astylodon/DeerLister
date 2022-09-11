@@ -10,16 +10,25 @@ use Twig\TwigFilter;
 class DeerLister
 {
     private Environment $twig;
+
     private array $filePreviews;
+    private array $config;
 
     function __construct()
     {
         $this->filePreviews = [];
+        $this->config = [];
 
         // setup twig
         $loader = new FilesystemLoader("_internal/templates");
 
         $this->twig = new Environment($loader);
+
+        // load config
+        if (in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml"))
+        {
+            $this->config = yaml_parse(file_get_contents("_internal/config.yaml"));
+        }
 
         // Convert a size in byte to something more diggest
         $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
@@ -190,6 +199,13 @@ class DeerLister
         return implode("/", array_diff($paths, [""]));
     }
 
+    /**
+     * Returns whether a file is previewable by one of the file previews
+     * 
+     * @param string $filename The name of the file
+     * 
+     * @return bool Whether the file is previewable
+     */
     private function isFilePreviewable(string $filename): bool
     {
         foreach ($this->filePreviews as $preview)
@@ -203,19 +219,27 @@ class DeerLister
         return false;
     }
 
+    /**
+     * Registers a new file preview
+     * 
+     * @param string $name The name of the file preview
+     * @param FilePreview $instance An instance of the file preview class
+     */
     public function registerFilePreview(string $name, FilePreview $instance)
     {
-        // TODO should be checked if name is enabled in config
+        // check if preview is enabled
+        if (isset($this->config["previews"]) && !in_array($name, $this->config["previews"]))
+        {
+            return;
+        }
 
         array_push($this->filePreviews, $instance);
     }
 
     public function render(string $directory): string
     {
-        $config = in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml") ? yaml_parse(file_get_contents("_internal/config.yaml")) : [];
-
         // read the directory
-        if (($files = $this->readDirectory($directory, $config)) === false)
+        if (($files = $this->readDirectory($directory, $this->config)) === false)
         {
             http_response_code(404);
 
