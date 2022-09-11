@@ -6,13 +6,13 @@
 
         <meta property="og:title" content="{{ title }}">
         <meta name="theme-color" content="#4169e1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="icon" href="_internal/img/deer.png">
 
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="_internal/css/index.css">
         <link rel="stylesheet" type="text/css" href="_internal/css/light.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body>
         <div id="banner">
@@ -21,5 +21,15 @@
         <div id="content">
             {% block content %}{% endblock %}
         </div>
+
+        <div class="modal" id="modal">
+            <div class="modal-card">
+                <div class="modal-body">
+
+                </div>
+            </div>
+        </div>
+
+        <script src="_internal/script.js"></script>
     </body>
 </html>

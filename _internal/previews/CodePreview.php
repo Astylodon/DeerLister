@@ -12,7 +12,7 @@ class CodePreview implements FilePreview
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
         // couple examples
-        return in_array($ext, ["txt", "js", "css", "cs", "c", "cpp", "py", "sh", "bat", "ps1", "go"]);
+        return in_array($ext, ["txt", "js", "css", "cs", "c", "cpp", "py", "sh", "bat", "ps1", "go", "yml", "json"]);
     }
 
     public function renderPreview(string $path, Twig\Environment $twig): string

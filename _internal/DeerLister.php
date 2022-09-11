@@ -98,6 +98,7 @@ class DeerLister
             return false;
         }
 
+        $relPath = $this->getRelativePath($directory);
         $files = [];
 
         foreach(scandir($path) as $name)
@@ -119,7 +120,17 @@ class DeerLister
 
             $isFolder = is_dir($file);
 
-            array_push($files, ["name" => $name, "isFolder" => $isFolder, "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files,
+                [
+                    "name" => $name,
+                    "isFolder" => $isFolder,
+                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)),
+                    "lastModified" => $modified,
+                    "size" => filesize($file),
+
+                    "filePreview" => !$isFolder && $this->isFilePreviewable($name) ? $this->pathCombine($relPath, $name) : null
+                ]
+            );
         }
 
         usort($files, array($this, "filesCmp"));
@@ -165,6 +176,31 @@ class DeerLister
         $path = realpath($base . "/" . $directory);
         
         return strtr(substr($path, strlen($base) + 1), DIRECTORY_SEPARATOR, "/");
+    }
+
+    /**
+     * Combines multiple values to a path. Currently very simple, does not fix paths or check for trailing path seperator
+     * 
+     * @param string $paths Parameters of paths
+     * 
+     * @return string The combined path
+     */
+    private function pathCombine(string ...$paths): string
+    {
+        return implode("/", array_diff($paths, [""]));
+    }
+
+    private function isFilePreviewable(string $filename): bool
+    {
+        foreach ($this->filePreviews as $preview)
+        {
+            if ($preview->doesHandle($filename))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function registerFilePreview(string $name, FilePreview $instance)
