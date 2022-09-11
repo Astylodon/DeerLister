@@ -3,9 +3,9 @@
 require_once "vendor/autoload.php";
 require_once "_internal/DeerLister.php";
 
-// TODO see if either composer autoload or php audoload can be used for this
-require_once "_internal/previews/MediaPreview.php";
-require_once "_internal/previews/CodePreview.php";
+spl_autoload_register(function($class) {
+    include "_internal/previews/" . $class . ".php";
+});
 
 $lister = new DeerLister();
 
