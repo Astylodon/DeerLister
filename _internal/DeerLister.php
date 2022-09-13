@@ -102,7 +102,7 @@ class DeerLister
             return false;
         }
 
-        if ($this->isHidden($directory, $config, true))
+        if ($this->isHidden($directory, true))
         {
             return false;
         }
@@ -119,7 +119,7 @@ class DeerLister
             }
 
             // check if file is hidden
-            if ($this->isHidden($name, $config, false))
+            if ($this->isHidden($name, false))
             {
                 continue;
             }
@@ -150,11 +150,12 @@ class DeerLister
      * Returns if a file/folder should be displayed or not
      *
      * @param string $path Path to the file/folder
-     * @param mixed $config config.yaml file
      * @param bool $ignoreHide Do we only consider forbidden files (true) or also hidden ones (false)
     */
-    private function isHidden(string $path, mixed $config, bool $ignoreHide): bool
+    private function isHidden(string $path, bool $ignoreHide = false): bool
     {
+        $config = $this->config;
+
         if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
         {
             $hidden = $config["forbidden"];
@@ -227,13 +228,15 @@ class DeerLister
      * @param string $name The name of the file preview
      * @param FilePreview $instance An instance of the file preview class
      */
-    public function registerFilePreview(string $name, FilePreview $instance)
+    public function registerFilePreview(string $name, string $preview)
     {
         // check if preview is enabled
-        if (isset($this->config["previews"]) && !in_array($name, $this->config["previews"]))
+        if (isset($this->config["enabled_previews"]) && !in_array($name, $this->config["enabled_previews"]))
         {
             return;
         }
+
+        $instance = new $preview($this->config);
 
         array_push($this->filePreviews, $instance);
     }
@@ -294,7 +297,13 @@ class DeerLister
             return "File could not be previewed";
         }
 
-        // TODO check config forbidden
+        // check if file is not hidden or forbidden
+        if ($this->isHidden($file))
+        {
+            http_response_code(404);
+
+            return "File could not be previewed";
+        }
 
         $filename = pathinfo($file, PATHINFO_BASENAME);
         $ext = pathinfo($file, PATHINFO_EXTENSION);

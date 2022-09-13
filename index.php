@@ -3,14 +3,20 @@
 require_once "vendor/autoload.php";
 require_once "_internal/DeerLister.php";
 
+// autoload previews
 spl_autoload_register(function($class) {
-    include "_internal/previews/" . $class . ".php";
+    $file = "_internal/previews/" . $class . ".php";
+
+    if (file_exists($file))
+    {
+        include $file;
+    }
 });
 
 $lister = new DeerLister();
 
-$lister->registerFilePreview("media", new MediaPreview());
-$lister->registerFilePreview("code", new CodePreview());
+$lister->registerFilePreview("media", MediaPreview::class);
+$lister->registerFilePreview("code", CodePreview::class);
 
 if (isset($_GET["preview"]))
 {
