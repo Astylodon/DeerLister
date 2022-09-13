@@ -5,8 +5,7 @@ class Icons
     private static $brands =
     [
         'md' => 'fa-markdown',
-        'php' => 'fa-php',
-        'ttf' => 'fa-font'
+        'php' => 'fa-php'
     ];
 
     private static $solids =
@@ -26,6 +25,7 @@ class Icons
         'pptx' => 'fa-file-powerpoint', // Powerpoint format
         'png' => 'fa-image',
         'rar' => 'fa-file-zipper',
+        'ttf' => 'fa-font',
         'txt' => 'fa-file-lines',
         'xls' => 'fa-file-excel', // Old Excel format
         'xlsm' => 'fa-file-excel', // Excel format with macro
