@@ -13,7 +13,7 @@ class CodePreview implements FilePreview
             "yml", "yaml", "cs", "c", "h", "cpp", "hpp", "sh", "ps1", "bat",
             "py", "rs", "ts", "lua", "java", "go", "csproj",
             "kt", "sql", "dart", "rb", "asm", "vba", "fs",
-            "hs", "patch", "def", "bt", "log", "cmake"
+            "hs", "patch", "def", "bt", "log", "cmake", "lock"
         ];
 
     const UNSAFE_EXTENSIONS =
@@ -46,6 +46,7 @@ class CodePreview implements FilePreview
         if (in_array($extension, [ "txt", "log", "def", "csv", "tsv" ])) $extension = "plaintext";
         else if ($extension === "csproj") $extension = "xml";
         else if ($extension === "asm") $extension = "x86asm";
+        else if ($extension === "lock") $extension = "json";
         else if ($extension === "bt") $extension = "c";
 
         $class = $extension;
