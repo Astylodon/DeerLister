@@ -21,9 +21,22 @@ class CodePreview implements FilePreview
             "php"
         ];
 
+    private array $config;
+
+    function __construct(array $config)
+    {
+        $this->config = $config;
+    }
+
     public function doesHandle(string $filename, string $ext): bool
     {
-        // TODO allow previews to have a config section and check for unsafe
+        if (isset($this->config["previews"]["code"]["unsafe"]) && $this->config["previews"]["code"]["unsafe"])
+        {
+            if (in_array($ext, self::UNSAFE_EXTENSIONS))
+            {
+                return true;
+            }
+        }
 
         return in_array($ext, self::EXTENSIONS);
     }

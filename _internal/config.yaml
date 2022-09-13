@@ -7,6 +7,12 @@ forbidden:
 hidden:
 
 ## List of enabled file previews
-previews:
+enabled_previews:
   - media
   - code
+
+## Settings for specific file previews
+previews:
+  code:
+    ## Enables code preview for files that might be considered unsafe such as .php
+    unsafe: false
