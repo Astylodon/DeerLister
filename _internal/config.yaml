@@ -8,7 +8,8 @@ hidden:
 
 ## List of enabled file previews
 enabled_previews:
-  - media
+  - image
+  - video
   - code
 
 ## Settings for specific file previews

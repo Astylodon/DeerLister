@@ -15,7 +15,8 @@ spl_autoload_register(function($class) {
 
 $lister = new DeerLister();
 
-$lister->registerFilePreview("media", MediaPreview::class);
+$lister->registerFilePreview("image", ImagePreview::class);
+$lister->registerFilePreview("video", VideoPreview::class);
 $lister->registerFilePreview("code", CodePreview::class);
 
 if (isset($_GET["preview"]))
