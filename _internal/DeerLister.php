@@ -11,12 +11,24 @@ class DeerLister
 {
     private Environment $twig;
 
+    private array $filePreviews;
+    private array $config;
+
     function __construct()
     {
+        $this->filePreviews = [];
+        $this->config = [];
+
         // setup twig
         $loader = new FilesystemLoader("_internal/templates");
 
         $this->twig = new Environment($loader);
+
+        // load config
+        if (in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml"))
+        {
+            $this->config = yaml_parse(file_get_contents("_internal/config.yaml"));
+        }
 
         // Convert a size in byte to something more diggest
         $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
@@ -90,11 +102,12 @@ class DeerLister
             return false;
         }
 
-        if ($this->isHidden($directory, $config, true))
+        if ($this->isHidden($directory, true))
         {
             return false;
         }
 
+        $relPath = $this->getRelativePath($directory);
         $files = [];
 
         foreach(scandir($path) as $name)
@@ -106,7 +119,7 @@ class DeerLister
             }
 
             // check if file is hidden
-            if ($this->isHidden($name, $config, false))
+            if ($this->isHidden($name, false))
             {
                 continue;
             }
@@ -116,7 +129,17 @@ class DeerLister
 
             $isFolder = is_dir($file);
 
-            array_push($files, ["name" => $name, "isFolder" => $isFolder, "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files,
+                [
+                    "name" => $name,
+                    "isFolder" => $isFolder,
+                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)),
+                    "lastModified" => $modified,
+                    "size" => filesize($file),
+
+                    "filePreview" => !$isFolder && $this->isFilePreviewable($name) ? $this->pathCombine($relPath, $name) : null
+                ]
+            );
         }
 
         usort($files, array($this, "filesCmp"));
@@ -127,11 +150,12 @@ class DeerLister
      * Returns if a file/folder should be displayed or not
      *
      * @param string $path Path to the file/folder
-     * @param mixed $config config.yaml file
      * @param bool $ignoreHide Do we only consider forbidden files (true) or also hidden ones (false)
     */
-    private function isHidden(string $path, mixed $config, bool $ignoreHide): bool
+    private function isHidden(string $path, bool $ignoreHide = false): bool
     {
+        $config = $this->config;
+
         if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
         {
             $hidden = $config["forbidden"];
@@ -164,12 +188,63 @@ class DeerLister
         return strtr(substr($path, strlen($base) + 1), DIRECTORY_SEPARATOR, "/");
     }
 
+    /**
+     * Combines multiple values to a path. Currently very simple, does not fix paths or check for trailing path seperator
+     * 
+     * @param string $paths Parameters of paths
+     * 
+     * @return string The combined path
+     */
+    private function pathCombine(string ...$paths): string
+    {
+        return implode("/", array_diff($paths, [""]));
+    }
+
+    /**
+     * Returns whether a file is previewable by one of the file previews
+     * 
+     * @param string $filename The name of the file
+     * 
+     * @return bool Whether the file is previewable
+     */
+    private function isFilePreviewable(string $filename): bool
+    {
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+        foreach ($this->filePreviews as $preview)
+        {
+            if ($preview->doesHandle($filename, $ext))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Registers a new file preview
+     * 
+     * @param string $name The name of the file preview
+     * @param FilePreview $instance An instance of the file preview class
+     */
+    public function registerFilePreview(string $name, string $preview)
+    {
+        // check if preview is enabled
+        if (isset($this->config["enabled_previews"]) && !in_array($name, $this->config["enabled_previews"]))
+        {
+            return;
+        }
+
+        $instance = new $preview($this->config);
+
+        array_push($this->filePreviews, $instance);
+    }
+
     public function render(string $directory): string
     {
-        $config = in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml") ? yaml_parse(file_get_contents("_internal/config.yaml")) : [];
-
         // read the directory
-        if (($files = $this->readDirectory($directory, $config)) === false)
+        if (($files = $this->readDirectory($directory, $this->config)) === false)
         {
             http_response_code(404);
 
@@ -206,5 +281,42 @@ class DeerLister
                 "readme" => $readme
             ]
         );
+    }
+
+    public function getFilePreview(string $file): string
+    {
+        // make sure we are not accessing files outside web root
+        // path passed to any file preview should already be safe
+        $base = getcwd();
+        $path = realpath($base . "/" . $file);
+
+        if ($path === false || strpos($path, $base) !== 0)
+        {
+            http_response_code(404);
+
+            return "File could not be previewed";
+        }
+
+        // check if file is not hidden or forbidden
+        if ($this->isHidden($file))
+        {
+            http_response_code(404);
+
+            return "File could not be previewed";
+        }
+
+        $filename = pathinfo($file, PATHINFO_BASENAME);
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+        foreach ($this->filePreviews as $preview)
+        {
+            if ($preview->doesHandle($filename, $ext))
+            {
+                return $preview->renderPreview($file, $ext, $this->twig);
+            }
+        }
+
+        http_response_code(404);
+        return "File could not be previewed";
     }
 }
