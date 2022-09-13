@@ -12,7 +12,7 @@ class MediaPreview implements FilePreview
         return in_array($ext, ["png", "jpg", "jpeg", "gif", "mp4"]);
     }
 
-    public function renderPreview(string $path, Twig\Environment $twig): string
+    public function renderPreview(string $path, string $extension, Twig\Environment $twig): string
     {
         $video = pathinfo($path, PATHINFO_EXTENSION) == "mp4";
 

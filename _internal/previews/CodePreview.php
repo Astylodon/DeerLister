@@ -28,8 +28,10 @@ class CodePreview implements FilePreview
         return in_array($ext, self::EXTENSIONS);
     }
 
-    public function renderPreview(string $path, Twig\Environment $twig): string
+    public function renderPreview(string $path, string $extension, Twig\Environment $twig): string
     {
-        return $twig->render("previews/code.html.twig", [ "code" => file_get_contents($path) ]);
+        $content = file_get_contents($path);
+
+        return $twig->render("previews/code.html.twig", [ "code" => $content ]);
     }
 }

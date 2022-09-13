@@ -303,7 +303,7 @@ class DeerLister
         {
             if ($preview->doesHandle($filename, $ext))
             {
-                return $preview->renderPreview($file, $this->twig);
+                return $preview->renderPreview($file, $ext, $this->twig);
             }
         }
 
