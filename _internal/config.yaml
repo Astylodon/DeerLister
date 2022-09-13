@@ -11,6 +11,7 @@ enabled_previews:
   - image
   - video
   - code
+  - audio
 
 ## Settings for specific file previews
 previews:
