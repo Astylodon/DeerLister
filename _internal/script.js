@@ -32,7 +32,10 @@ function fileClicked(event) {
                 return response.text()
             })
             .then(content => {
-                showFileModal(target, filename, content)
+                showFileModal(target, filename, content);
+                document.querySelectorAll('pre code').forEach((el) => {
+                    hljs.highlightElement(el);
+                });
             })
     }
 }
