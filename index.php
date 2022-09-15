@@ -5,15 +5,22 @@ require_once "_internal/DeerLister.php";
 
 // autoload previews
 spl_autoload_register(function($class) {
-    $file = "_internal/previews/" . $class . ".php";
+    $filePreview = "_internal/previews/" . $class . ".php";
+    $fileDisplay = "_internal/displays/" . $class . ".php";
 
-    if (file_exists($file))
+    if (file_exists($filePreview))
     {
-        include $file;
+        include $filePreview;
+    }
+    else if (file_exists($fileDisplay))
+    {
+        include $fileDisplay;
     }
 });
 
 $lister = new DeerLister();
+
+$lister->registerFileDisplay("image", ImageDisplay::class);
 
 $lister->registerFilePreview("audio", AudioPreview::class);
 $lister->registerFilePreview("image", ImagePreview::class);

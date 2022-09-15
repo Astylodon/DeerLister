@@ -12,11 +12,13 @@ class DeerLister
     private Environment $twig;
 
     private array $filePreviews;
+    private array $fileDisplays;
     private array $config;
 
     function __construct()
     {
         $this->filePreviews = [];
+        $this->fileDisplays = [];
         $this->config = [];
 
         // setup twig
@@ -247,6 +249,19 @@ class DeerLister
         array_push($this->filePreviews, $instance);
     }
 
+    /**
+     * Registers a new file display
+     * 
+     * @param string $name The name of the file display
+     * @param FilePreview $instance An instance of the file display class
+     */
+    public function registerFileDisplay(string $name, string $display)
+    {
+        $instance = new $display($this->config);
+
+        array_push($this->fileDisplays, $instance);
+    }
+
     public function render(string $directory): string
     {
         // read the directory
@@ -263,11 +278,12 @@ class DeerLister
         $title = $path == "" ? "Home" : basename($directory);
         $readme = null;
         $filesFilter = [];
-        $displayMode = "normal";
+        $displayMode = null;
         $displayBack = true;
+        $displayOthers = true;
 
         // Check the config to set the display mode and others options set
-        if ($this->config["displays"] !== null && array_key_exists($path, $this->config["displays"]))
+        if (isset($this->config["displays"]) && array_key_exists($path, $this->config["displays"]) && array_key_exists($this->config["displays"][$path]["format"], $this->fileDisplays))
         {
             $curr = $this->config["displays"][$path];
             $displayMode = $curr["format"];
@@ -304,7 +320,7 @@ class DeerLister
                 "title" => $title,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
                 "readme" => $readme,
-                "display" => "displays/" . $displayMode . ".html.twig",
+                "display" => "displays/" . ($displayMode ?? "normal") . ".html.twig",
                 "override" => [ "displayBack" => $displayBack, "displayOthers" => $displayOthers ]
             ]
         );
