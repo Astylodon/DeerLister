@@ -69,6 +69,10 @@ class DeerLister
 
             return $finalPath;
         }));
+
+        $this->twig->addFilter(new TwigFilter("isImage", function($ext) {
+            return in_array($ext, ["apng", "png", "jpg", "jpeg", "gif", "svg", "webp"]);
+        }));
     }
 
     private function filesCmp(array $a, array $b): int
@@ -128,14 +132,16 @@ class DeerLister
             $modified = date("Y-m-d H:i", filemtime($file));
 
             $isFolder = is_dir($file);
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
 
             array_push($files,
                 [
                     "name" => $name,
                     "isFolder" => $isFolder,
-                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)),
+                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon($ext),
                     "lastModified" => $modified,
                     "size" => filesize($file),
+                    "extension" => $ext,
 
                     "filePreview" => !$isFolder && $this->isFilePreviewable($name) ? $this->pathCombine($relPath, $name) : null
                 ]

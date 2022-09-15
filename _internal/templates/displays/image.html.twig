@@ -2,8 +2,15 @@
     {% for file in files %}
         <div class="display-image">
             {%if file.name == ".." %}
-                <a class="display-image-icon" href="{{ file | getFilePath(path.full) }}">
-                <i class="fa-sharp fa-solid fa-arrow-left"></i>
+                <a href="{{ file | getFilePath(path.full) }}">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+            {% elseif not file.extension | isImage %}
+                <a href="{{ file | getFilePath(path.full) }}">
+                    <i class="{{ file.icon }}"></i>
+                    <p>
+                        {{ file.name }}
+                    </p>
                 </a>
             {% else %}
                 <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}" {%if file.filePreview %} data-preview="{{ file.filePreview }}" {% endif %}>

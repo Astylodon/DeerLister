@@ -15,8 +15,15 @@
     max-height: 100%;
 }
 
-.display-image-icon {
+.display-image i {
     font-size: 10em;
     color: black;
-    vertical-align: middle;
+}
+
+.display-image p {
+    color: black;
+}
+
+.display-image a {
+    text-decoration: none;
 }
