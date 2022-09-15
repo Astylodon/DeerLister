@@ -4,6 +4,9 @@
             <div class="display-image">
                 {%if file.name == ".." %}
                     <i class="fa-solid fa-arrow-left"></i>
+                    <p>
+                        Back
+                    </p>
                 {% elseif not file.extension | canBeDisplayed(displayName) %}
                     <i class="{{ file.icon }}"></i>
                     <p>
