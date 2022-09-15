@@ -1,14 +1,21 @@
 .display-image-flex-container {
-    display: flex;
-    flex-flow: wrap;
-    text-align: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+    grid-gap: 2em;
     justify-content: center;
+    padding: initial;
+    text-align: center;
+    margin-top: 1em;
+    align-items: center;
+}
+
+.display-image-flex-container a {
+    text-decoration: none;
 }
 
 .display-image {
     width: 300px;
     height: 300px;
-    margin: 1em;
 }
 
 .display-image img {
@@ -23,8 +30,4 @@
 
 .display-image p {
     color: black;
-}
-
-.display-image a {
-    text-decoration: none;
 }
