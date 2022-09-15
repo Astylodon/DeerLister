@@ -259,7 +259,7 @@ class DeerLister
     {
         $instance = new $display($this->config);
 
-        array_push($this->fileDisplays, $instance);
+        $this->fileDisplays[$name] = $instance;
     }
 
     public function render(string $directory): string
