@@ -19,3 +19,8 @@ previews:
   code:
     ## Enables code preview for files that might be considered unsafe such as .php
     unsafe: false
+
+displays:
+  ## Choose how the content of a folder is displayed
+  ## Format: "path/to/folder": displayMode
+  ## Displays possible values: none, image

@@ -279,13 +279,19 @@ class DeerLister
             }
         }
         
+        $displayMode = "normal";
+        if(array_key_exists($path, $this->config["displays"]))
+        {
+            $displayMode = $this->config["displays"][$path];
+        }
+
         return $this->twig->render("index.html.twig",
             [
                 "files" => $files,
                 "title" => $title,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
                 "readme" => $readme,
-                "display" => "displays/image.html.twig"
+                "display" => "displays/" . $displayMode . ".html.twig"
             ]
         );
     }
