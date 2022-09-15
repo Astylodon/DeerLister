@@ -1,15 +1,22 @@
 .display-image-flex-container {
     display: flex;
     flex-flow: wrap;
+    text-align: center;
 }
 
 .display-image {
-    max-width: 20em;
-    max-height: 20em;
+    width: 300px;
+    height: 300px;
     margin: 1em;
 }
 
+.display-image img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .display-image-icon {
-    font-size: 20em;
+    font-size: 10em;
     color: black;
+    vertical-align: middle;
 }
