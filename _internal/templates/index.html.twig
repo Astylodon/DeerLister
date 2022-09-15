@@ -21,7 +21,10 @@
             </div>
         </div>
     {% endif %}
-    {{ include(display) }}
+
+    <span id="file-display">
+        {{ include(display) }}
+    </span>
 
     <template id="filepreview">
         <h2></h2>

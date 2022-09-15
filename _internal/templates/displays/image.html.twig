@@ -1,13 +1,15 @@
 <div class="display-image-flex-container">
     {% for file in files %}
-        {%if file.name == ".." %}
-            <a class="display-image-icon" href="{{ file | getFilePath(path.full) }}">
-            <i class="fa-sharp fa-solid fa-arrow-left"></i>
-            </a>
-        {% else %}
-            <a class="display-image" href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}" {%if file.filePreview %} data-preview="{{ file.filePreview }}" {% endif %}>
-                <img src="{{ file | getFilePath(path.full) }}"/>
-            </a>
-        {% endif %}
+        <div class="display-image">
+            {%if file.name == ".." %}
+                <a class="display-image-icon" href="{{ file | getFilePath(path.full) }}">
+                <i class="fa-sharp fa-solid fa-arrow-left"></i>
+                </a>
+            {% else %}
+                <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}" {%if file.filePreview %} data-preview="{{ file.filePreview }}" {% endif %}>
+                    <img src="{{ file | getFilePath(path.full) }}"/>
+                </a>
+            {% endif %}
+        </div>
     {% endfor %}
 <div>
