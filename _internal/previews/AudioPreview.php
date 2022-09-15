@@ -9,7 +9,7 @@ class AudioPreview implements FilePreview
 {
     public function doesHandle(string $filename, string $ext): bool
     {
-        return in_array($ext, ["mp3", "wav"]);
+        return in_array($ext, ["mp3", "wav", "ogg", "webm", "flac"]);
     }
 
     public function renderPreview(string $path, string $extension, Twig\Environment $twig): string
