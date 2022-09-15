@@ -72,8 +72,9 @@ class DeerLister
             return $finalPath;
         }));
 
-        $this->twig->addFilter(new TwigFilter("isImage", function($ext) {
-            return in_array($ext, ["apng", "png", "jpg", "jpeg", "gif", "svg", "webp"]);
+        // Can the file be rendered by the current display
+        $this->twig->addFilter(new TwigFilter("canBeDisplayed", function($ext, $displayName) {
+            return $this->fileDisplays[$displayName]->doesHandle($ext);
         }));
     }
 
@@ -288,6 +289,7 @@ class DeerLister
             $curr = $this->config["displays"][$path];
             $displayMode = $curr["format"];
             $displayBack = $curr["displayBack"];
+            $displayOthers = $curr["displayOthers"];
         }
 
         foreach ($files as $f)
@@ -308,6 +310,8 @@ class DeerLister
 
             if (!$displayBack && $f["name"] === "..")
             { }
+            else if (!$displayOthers && isset($displayMode) && !$this->fileDisplays[$displayMode]->doesHandle($f["extension"]))
+            { }
             else
             {
                 array_push($filesFilter, $f);
@@ -321,6 +325,7 @@ class DeerLister
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
                 "readme" => $readme,
                 "display" => "displays/" . ($displayMode ?? "normal") . ".html.twig",
+                "displayName" => $displayMode,
                 "override" => [ "displayBack" => $displayBack, "displayOthers" => $displayOthers ]
             ]
         );
