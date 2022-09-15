@@ -278,7 +278,8 @@ class DeerLister
                 "files" => $files,
                 "title" => $title,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
-                "readme" => $readme
+                "readme" => $readme,
+                "display" => "displays/image.html.twig"
             ]
         );
     }
