@@ -21,7 +21,9 @@ previews:
     unsafe: false
 
 displays:
-  ## Choose how the content of a folder is displayed
-  ## Format: "path/to/folder": displayMode
-  ## Displays possible values: none, image
-  "publish/demo": image
+## Choose how the content of a folder is displayed
+## Example:
+## "path/to/folder":
+##  format: image ## Possible values: none, image
+##  displayOthers: false ## If format not none, do we display the files that can't be previewed
+##  displayBack: false ## Do we display the "back" folder

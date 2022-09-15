@@ -262,9 +262,22 @@ class DeerLister
 
         $title = $path == "" ? "Home" : basename($directory);
         $readme = null;
+        $filesFilter = [];
+        $displayMode = "normal";
+        $displayBack = true;
+
+        // Check the config to set the display mode and others options set
+        if(array_key_exists($path, $this->config["displays"]))
+        {
+            $curr = $this->config["displays"][$path];
+            $displayMode = $curr["format"];
+            $displayBack = $curr["displayBack"];
+        }
+
         foreach ($files as $f)
         {
-            if (strtoupper($f["name"]) === 'README.MD')
+            // We look for the README to display it
+            if ($readme === null && strtoupper($f["name"]) === 'README.MD')
             {
                 $content = file_get_contents(($directory == "" ? "" : $directory . "/") . $f["name"]);
 
@@ -275,23 +288,24 @@ class DeerLister
                 {
                     $title = $parsedown->getTitle();
                 }
-                break;
             }
-        }
-        
-        $displayMode = "normal";
-        if(array_key_exists($path, $this->config["displays"]))
-        {
-            $displayMode = $this->config["displays"][$path];
+
+            if (!$displayBack && $f["name"] === "..")
+            { }
+            else
+            {
+                array_push($filesFilter, $f);
+            }
         }
 
         return $this->twig->render("index.html.twig",
             [
-                "files" => $files,
+                "files" => $filesFilter,
                 "title" => $title,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
                 "readme" => $readme,
-                "display" => "displays/" . $displayMode . ".html.twig"
+                "display" => "displays/" . $displayMode . ".html.twig",
+                "override" => [ "displayBack" => $displayBack, "displayOthers" => $displayOthers ]
             ]
         );
     }
