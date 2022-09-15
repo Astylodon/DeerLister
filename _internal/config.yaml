@@ -14,6 +14,9 @@ enabled_previews:
   - audio
   - markdown
 
+## Do we preview the README if one is present
+enabled_readme: true
+
 ## Settings for specific file previews
 previews:
   code:

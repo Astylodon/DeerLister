@@ -267,7 +267,7 @@ class DeerLister
         $displayBack = true;
 
         // Check the config to set the display mode and others options set
-        if(array_key_exists($path, $this->config["displays"]))
+        if ($this->config["displays"] !== null && array_key_exists($path, $this->config["displays"]))
         {
             $curr = $this->config["displays"][$path];
             $displayMode = $curr["format"];
@@ -277,7 +277,7 @@ class DeerLister
         foreach ($files as $f)
         {
             // We look for the README to display it
-            if ($readme === null && strtoupper($f["name"]) === 'README.MD')
+            if ($readme === null && $this->config["enabled_readme"] && strtoupper($f["name"]) === 'README.MD')
             {
                 $content = file_get_contents(($directory == "" ? "" : $directory . "/") . $f["name"]);
 
