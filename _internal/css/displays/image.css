@@ -1,0 +1,32 @@
+.display-image-flex-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, max-content));
+    grid-gap: 2em;
+    justify-content: center;
+    padding: initial;
+    text-align: center;
+    margin-top: 1em;
+}
+
+.display-image-flex-container a {
+    text-decoration: none;
+}
+
+.display-image {
+    width: 300px;
+    height: 300px;
+}
+
+.display-image img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.display-image i {
+    font-size: 10em;
+    color: black;
+}
+
+.display-image p {
+    color: black;
+}

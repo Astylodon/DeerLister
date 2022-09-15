@@ -12,11 +12,13 @@ class DeerLister
     private Environment $twig;
 
     private array $filePreviews;
+    private array $fileDisplays;
     private array $config;
 
     function __construct()
     {
         $this->filePreviews = [];
+        $this->fileDisplays = [];
         $this->config = [];
 
         // setup twig
@@ -68,6 +70,11 @@ class DeerLister
             }
 
             return $finalPath;
+        }));
+
+        // Can the file be rendered by the current display
+        $this->twig->addFilter(new TwigFilter("canBeDisplayed", function($ext, $displayName) {
+            return $this->fileDisplays[$displayName]->doesHandle($ext);
         }));
     }
 
@@ -128,14 +135,16 @@ class DeerLister
             $modified = date("Y-m-d H:i", filemtime($file));
 
             $isFolder = is_dir($file);
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
 
             array_push($files,
                 [
                     "name" => $name,
                     "isFolder" => $isFolder,
-                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)),
+                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon($ext),
                     "lastModified" => $modified,
                     "size" => filesize($file),
+                    "extension" => $ext,
 
                     "filePreview" => !$isFolder && $this->isFilePreviewable($name) ? $this->pathCombine($relPath, $name) : null
                 ]
@@ -241,6 +250,19 @@ class DeerLister
         array_push($this->filePreviews, $instance);
     }
 
+    /**
+     * Registers a new file display
+     * 
+     * @param string $name The name of the file display
+     * @param FilePreview $instance An instance of the file display class
+     */
+    public function registerFileDisplay(string $name, string $display)
+    {
+        $instance = new $display($this->config);
+
+        $this->fileDisplays[$name] = $instance;
+    }
+
     public function render(string $directory): string
     {
         // read the directory
@@ -256,9 +278,24 @@ class DeerLister
 
         $title = $path == "" ? "Home" : basename($directory);
         $readme = null;
+        $filesFilter = [];
+        $displayMode = null;
+        $displayBack = true;
+        $displayOthers = true;
+
+        // Check the config to set the display mode and others options set
+        if (isset($this->config["displays"]) && array_key_exists($path, $this->config["displays"]) && array_key_exists($this->config["displays"][$path]["format"], $this->fileDisplays))
+        {
+            $curr = $this->config["displays"][$path];
+            $displayMode = $curr["format"];
+            $displayBack = $curr["displayBack"];
+            $displayOthers = $curr["displayOthers"];
+        }
+
         foreach ($files as $f)
         {
-            if (strtoupper($f["name"]) === 'README.MD')
+            // We look for the README to display it
+            if ($readme === null && $this->config["enabled_readme"] && strtoupper($f["name"]) === 'README.MD')
             {
                 $content = file_get_contents(($directory == "" ? "" : $directory . "/") . $f["name"]);
 
@@ -269,16 +306,27 @@ class DeerLister
                 {
                     $title = $parsedown->getTitle();
                 }
-                break;
+            }
+
+            if (!$displayBack && $f["name"] === "..")
+            { }
+            else if (!$displayOthers && isset($displayMode) && !$this->fileDisplays[$displayMode]->doesHandle($f["extension"]))
+            { }
+            else
+            {
+                array_push($filesFilter, $f);
             }
         }
-        
+
         return $this->twig->render("index.html.twig",
             [
-                "files" => $files,
+                "files" => $filesFilter,
                 "title" => $title,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
-                "readme" => $readme
+                "readme" => $readme,
+                "display" => "displays/" . ($displayMode ?? "normal") . ".html.twig",
+                "displayName" => $displayMode,
+                "override" => [ "displayBack" => $displayBack, "displayOthers" => $displayOthers ]
             ]
         );
     }

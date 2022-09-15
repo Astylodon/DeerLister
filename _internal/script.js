@@ -1,7 +1,7 @@
 const template = document.getElementById("filepreview")
 
 // register a click handler for each file link
-document.querySelectorAll(".flex-container > a").forEach(link => link.addEventListener("click", fileClicked))
+document.querySelectorAll("#file-display a").forEach(link => link.addEventListener("click", fileClicked))
 
 // prevents clicking modal to dispatch modal close
 document.querySelector(".modal-body").addEventListener("click", event => event.stopPropagation())
