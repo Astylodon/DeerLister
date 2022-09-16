@@ -13,9 +13,9 @@
                         {{ file.name }}
                     </p>
                 {% else %}
-                    <img src="{{ file | getFilePath(path.full) }}"/>
+                    <img src="{{ file | getFilePath(path.full) }}" alt=""/>
                 {% endif %}
             </div>
         </a>
     {% endfor %}
-<div>
+</div>
