@@ -6,20 +6,33 @@
 
         <meta property="og:title" content="{{ title }}">
         <meta name="theme-color" content="#4169e1">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <link rel="icon" href="_internal/img/deer.png">
 
         <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css">
         <link rel="stylesheet" type="text/css" href="_internal/css/index.css">
         <link rel="stylesheet" type="text/css" href="_internal/css/light.css">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="_internal/css/displays/image.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+
+        <script defer src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+        <script defer src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/languages/x86asm.min.js"></script>
     </head>
     <body>
-        <div id="banner">
+        <div class="banner">
             {% block banner %}{% endblock %}
         </div>
-        <div id="content">
+        <div class="content">
             {% block content %}{% endblock %}
         </div>
+
+        <div class="modal" id="modal">
+            <div class="modal-card">
+                <div class="modal-body"></div>
+            </div>
+        </div>
+
+        <script src="_internal/js/script.js"></script>
     </body>
 </html>

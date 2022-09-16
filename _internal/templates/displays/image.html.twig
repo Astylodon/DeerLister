@@ -1,0 +1,21 @@
+<div class="display-image-flex-container">
+    {% for file in files %}
+        <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}" {%if file.filePreview %} data-preview="{{ file.filePreview }}" {% endif %}>
+            <div class="display-image">
+                {%if file.name == ".." %}
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <p>
+                        Back
+                    </p>
+                {% elseif not file.extension | canBeDisplayed(displayName) %}
+                    <i class="{{ file.icon }}"></i>
+                    <p>
+                        {{ file.name }}
+                    </p>
+                {% else %}
+                    <img src="{{ file | getFilePath(path.full) }}" alt=""/>
+                {% endif %}
+            </div>
+        </a>
+    {% endfor %}
+</div>

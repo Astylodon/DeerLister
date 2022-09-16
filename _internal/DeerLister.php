@@ -1,7 +1,7 @@
 <?php
 
-require_once 'Icons.php';
-require_once 'ParsedownExtension.php';
+require_once "Icons.php";
+require_once "ParsedownExtension.php";
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -11,12 +11,26 @@ class DeerLister
 {
     private Environment $twig;
 
+    private array $filePreviews;
+    private array $fileDisplays;
+    private array $config;
+
     function __construct()
     {
+        $this->filePreviews = [];
+        $this->fileDisplays = [];
+        $this->config = [];
+
         // setup twig
         $loader = new FilesystemLoader("_internal/templates");
 
         $this->twig = new Environment($loader);
+
+        // load config
+        if (in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml"))
+        {
+            $this->config = yaml_parse(file_get_contents("_internal/config.yaml"));
+        }
 
         // Convert a size in byte to something more diggest
         $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
@@ -57,6 +71,11 @@ class DeerLister
 
             return $finalPath;
         }));
+
+        // Can the file be rendered by the current display
+        $this->twig->addFilter(new TwigFilter("canBeDisplayed", function($ext, $displayName) {
+            return $this->fileDisplays[$displayName]->doesHandle($ext);
+        }));
     }
 
     private function filesCmp(array $a, array $b): int
@@ -74,7 +93,7 @@ class DeerLister
         return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
     }
 
-    private function readDirectory(string $directory): array|false
+    private function readDirectory(string $directory, mixed $config): array|false
     {
         $base = getcwd();
         $path = realpath($base . "/" . $directory);
@@ -90,11 +109,12 @@ class DeerLister
             return false;
         }
 
-        if ($this->isHidden($directory))
+        if ($this->isHidden($directory, true))
         {
             return false;
         }
 
+        $relPath = $this->getRelativePath($directory);
         $files = [];
 
         foreach(scandir($path) as $name)
@@ -106,7 +126,7 @@ class DeerLister
             }
 
             // check if file is hidden
-            if ($this->isHidden($name))
+            if ($this->isHidden($name, false))
             {
                 continue;
             }
@@ -115,18 +135,48 @@ class DeerLister
             $modified = date("Y-m-d H:i", filemtime($file));
 
             $isFolder = is_dir($file);
+            $ext = pathinfo($file, PATHINFO_EXTENSION);
 
-            array_push($files, ["name" => $name, "isFolder" => $isFolder, "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon(pathinfo($file, PATHINFO_EXTENSION)), "lastModified" => $modified, "size" => filesize($file)]);
+            array_push($files,
+                [
+                    "name" => $name,
+                    "isFolder" => $isFolder,
+                    "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon($ext),
+                    "lastModified" => $modified,
+                    "size" => filesize($file),
+                    "extension" => $ext,
+
+                    "filePreview" => !$isFolder && $this->isFilePreviewable($name) ? $this->pathCombine($relPath, $name) : null
+                ]
+            );
         }
 
         usort($files, array($this, "filesCmp"));
         return $files;
     }
 
-    private function isHidden(string $path): bool
+    /**
+     * Returns if a file/folder should be displayed or not
+     *
+     * @param string $path Path to the file/folder
+     * @param bool $ignoreHide Do we only consider forbidden files (true) or also hidden ones (false)
+    */
+    private function isHidden(string $path, bool $ignoreHide = false): bool
     {
-        // files to hide, could array_merge with hidden files from a config
-        $hidden = ["_internal", "vendor"];
+        $config = $this->config;
+
+        if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
+        {
+            $hidden = $config["forbidden"];
+        }
+        else
+        {
+            $hidden = ["_internal", "vendor"];
+        }
+        if (!$ignoreHide && array_key_exists("hidden", $config) && $config["hidden"] !== NULL)
+        {
+            $hidden = [...$hidden, ...$config["hidden"]];
+        }
 
         foreach ($hidden as $search)
         {
@@ -147,10 +197,76 @@ class DeerLister
         return strtr(substr($path, strlen($base) + 1), DIRECTORY_SEPARATOR, "/");
     }
 
+    /**
+     * Combines multiple values to a path. Currently very simple, does not fix paths or check for trailing path seperator
+     * 
+     * @param string $paths Parameters of paths
+     * 
+     * @return string The combined path
+     */
+    private function pathCombine(string ...$paths): string
+    {
+        return implode("/", array_diff($paths, [""]));
+    }
+
+    /**
+     * Returns whether a file is previewable by one of the file previews
+     * 
+     * @param string $filename The name of the file
+     * 
+     * @return bool Whether the file is previewable
+     */
+    private function isFilePreviewable(string $filename): bool
+    {
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+
+        foreach ($this->filePreviews as $preview)
+        {
+            if ($preview->doesHandle($filename, $ext))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Registers a new file preview
+     * 
+     * @param string $name The name of the file preview
+     * @param FilePreview $instance An instance of the file preview class
+     */
+    public function registerFilePreview(string $name, string $preview)
+    {
+        // check if preview is enabled
+        if (isset($this->config["enabled_previews"]) && !in_array($name, $this->config["enabled_previews"]))
+        {
+            return;
+        }
+
+        $instance = new $preview($this->config);
+
+        array_push($this->filePreviews, $instance);
+    }
+
+    /**
+     * Registers a new file display
+     * 
+     * @param string $name The name of the file display
+     * @param FilePreview $instance An instance of the file display class
+     */
+    public function registerFileDisplay(string $name, string $display)
+    {
+        $instance = new $display($this->config);
+
+        $this->fileDisplays[$name] = $instance;
+    }
+
     public function render(string $directory): string
     {
         // read the directory
-        if (($files = $this->readDirectory($directory)) === false)
+        if (($files = $this->readDirectory($directory, $this->config)) === false)
         {
             http_response_code(404);
 
@@ -162,28 +278,93 @@ class DeerLister
 
         $title = $path == "" ? "Home" : basename($directory);
         $readme = null;
+        $filesFilter = [];
+        $displayMode = null;
+        $displayBack = true;
+        $displayOthers = true;
+
+        // Check the config to set the display mode and others options set
+        if (isset($this->config["displays"]) && array_key_exists($path, $this->config["displays"]) && array_key_exists($this->config["displays"][$path]["format"], $this->fileDisplays))
+        {
+            $curr = $this->config["displays"][$path];
+            $displayMode = $curr["format"];
+            $displayBack = $curr["displayBack"];
+            $displayOthers = $curr["displayOthers"];
+        }
+
         foreach ($files as $f)
         {
-            if (strtoupper($f["name"]) === 'README.MD')
+            // We look for the README to display it
+            if ($readme === null && $this->config["enabled_readme"] && strtoupper($f["name"]) === 'README.MD')
             {
+                $content = file_get_contents(($directory == "" ? "" : $directory . "/") . $f["name"]);
+
                 $parsedown = new ParsedownExtension();
                 $parsedown->setSafeMode(true);
-                $readme = $parsedown->text(file_get_contents($directory . $f["name"]));
+                $readme = $parsedown->text($content);
                 if ($parsedown->getTitle() !== null)
                 {
                     $title = $parsedown->getTitle();
                 }
-                break;
+            }
+
+            if (!$displayBack && $f["name"] === "..")
+            { }
+            else if (!$displayOthers && isset($displayMode) && !$this->fileDisplays[$displayMode]->doesHandle($f["extension"]))
+            { }
+            else
+            {
+                array_push($filesFilter, $f);
             }
         }
-        
+
         return $this->twig->render("index.html.twig",
             [
-                "files" => $files,
+                "files" => $filesFilter,
                 "title" => $title,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
-                "readme" => $readme
+                "readme" => $readme,
+                "display" => "displays/" . ($displayMode ?? "normal") . ".html.twig",
+                "displayName" => $displayMode,
+                "override" => [ "displayBack" => $displayBack, "displayOthers" => $displayOthers ]
             ]
         );
+    }
+
+    public function getFilePreview(string $file): string
+    {
+        // make sure we are not accessing files outside web root
+        // path passed to any file preview should already be safe
+        $base = getcwd();
+        $path = realpath($base . "/" . $file);
+
+        if ($path === false || strpos($path, $base) !== 0)
+        {
+            http_response_code(404);
+
+            return "File could not be previewed";
+        }
+
+        // check if file is not hidden or forbidden
+        if ($this->isHidden($file))
+        {
+            http_response_code(404);
+
+            return "File could not be previewed";
+        }
+
+        $filename = pathinfo($file, PATHINFO_BASENAME);
+        $ext = pathinfo($file, PATHINFO_EXTENSION);
+
+        foreach ($this->filePreviews as $preview)
+        {
+            if ($preview->doesHandle($filename, $ext))
+            {
+                return $preview->renderPreview($file, $ext, $this->twig);
+            }
+        }
+
+        http_response_code(404);
+        return "File could not be previewed";
     }
 }

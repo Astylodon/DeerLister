@@ -7,12 +7,12 @@
     background-color: lightgray;
 }
 
-#banner {
+.banner {
     background-color: royalblue;
     color: white;
 }
 
-#path a {
+.path a {
     color: white;
 }
 
@@ -22,4 +22,18 @@
 
 .flex-container a:hover {
     background-color: lightgray;
+}
+
+.modal-body {
+    background-color: white;
+    color: black;
+}
+
+.button {
+    background-color: lightblue;
+    color: black;
+}
+
+.codeblock {
+    background: #f5f2f0;
 }
