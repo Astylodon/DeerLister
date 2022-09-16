@@ -6,8 +6,10 @@ PHP >= 8.0
 
 ## Features
  - Lightweight and easy to use
+ - Highly configurable
  - README integration
  - File preview
+ - Custom displays
 
 ## License
 
