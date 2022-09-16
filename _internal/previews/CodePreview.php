@@ -10,10 +10,11 @@ class CodePreview implements FilePreview
     const EXTENSIONS =
         [
             "txt", "js", "css", "xml", "json", "toml", "csv", "tsv",
-            "yml", "yaml", "cs", "c", "h", "cpp", "hpp", "sh", "ps1", "bat",
-            "py", "rs", "ts", "lua", "java", "go", "csproj",
-            "kt", "sql", "dart", "rb", "asm", "vba", "fs",
-            "hs", "patch", "def", "bt", "log", "cmake", "lock"
+            "yml", "yaml", "cs", "c", "h", "cpp", "hpp", "sh", "ps1",
+            "py", "rs", "ts", "lua", "java", "go", "csproj", "sln",
+            "kt", "sql", "dart", "rb", "asm", "vba", "fs", "pom", 
+            "hs", "patch", "def", "bt", "log", "cmake", "lock", "bat",
+            "vcxproj"
         ];
 
     const UNSAFE_EXTENSIONS =
@@ -38,13 +39,18 @@ class CodePreview implements FilePreview
             }
         }
 
+        if (in_array($filename, [".gitignore", ".gitmodules"]))
+        {
+            return true;
+        }
+
         return in_array($ext, self::EXTENSIONS);
     }
 
     public function renderPreview(string $path, string $extension, Twig\Environment $twig): string
     {
         if (in_array($extension, [ "txt", "log", "def", "csv", "tsv" ])) $extension = "plaintext";
-        else if ($extension === "csproj") $extension = "xml";
+        else if (in_array($extension, [ "csproj", "vcxproj", "pom" ])) $extension = "xml";
         else if ($extension === "asm") $extension = "x86asm";
         else if ($extension === "lock") $extension = "json";
         else if ($extension === "bt") $extension = "c";
