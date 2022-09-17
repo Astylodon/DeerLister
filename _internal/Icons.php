@@ -4,7 +4,9 @@ class Icons
 {
     private static $brands =
     [
-        'md' => 'fa-markdown',
+        'md'    => 'fa-markdown',
+        'apk'   => 'fa-android',
+        'jar'   => 'fa-java'
     ];
 
     private static $solids =
@@ -42,7 +44,7 @@ class Icons
         'php'   => 'fa-file-code',
         'fs'    => 'fa-file-code', // F#
         'go'    => 'fa-file-code', // Golang
-        'h'     =>  'fa-file-code', // C
+        'h'     => 'fa-file-code', // C
         'hpp'   => 'fa-file-code', // C++
         'hs'    => 'fa-file-code', // Haskell
         'java'  => 'fa-file-code',
@@ -79,8 +81,6 @@ class Icons
         'so'    => 'fa-gears',
         'a'     => 'fa-gears',
         'wasm'  => 'fa-gears',
-        'apk'   => 'fa-gears',
-        'jar'   => 'fa-gears',
 
         'db'        => 'fa-database',
         'sqlite'    => 'fa-database',
@@ -102,6 +102,8 @@ class Icons
         "mp4"   => 'fa-file-video',
         "ogg"   => 'fa-file-audio',
         'flac'  => 'fa-file-audio',
+        'mkv'   => 'fa-file-video',
+        'avi'   => 'fa-file-video',
     ];
 
     public static function getIcon(string $extension): string
