@@ -80,17 +80,30 @@ class DeerLister
 
     private function filesCmp(array $a, array $b): int
     {
-        if ($a["isFolder"] && $b["isFolder"])
-        {
-            return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
-        }
-
-        if ($b["isFolder"])
-        {
-            return 1;
-        }
-
         return strcmp(strtoupper($a["name"]), strtoupper($b["name"]));
+    }
+
+    /**
+     * Sort a list of files and folders, will put folders first
+     * 
+     * @param array $files The array of files
+     * 
+     * @return array The sorted array
+     */
+    private function sortFiles(array $files): array
+    {
+        $folders = array_filter($files, function($file) {
+            return $file["isFolder"];
+        });
+
+        $files = array_filter($files, function($file) {
+            return !$file["isFolder"];
+        });
+
+        usort($folders, array($this, "filesCmp"));  
+        usort($files, array($this, "filesCmp"));  
+
+        return array_merge($folders, $files);
     }
 
     private function readDirectory(string $directory, mixed $config): array|false
@@ -151,8 +164,7 @@ class DeerLister
             );
         }
 
-        usort($files, array($this, "filesCmp"));
-        return $files;
+        return $this->sortFiles($files);
     }
 
     /**
