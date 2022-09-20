@@ -230,6 +230,11 @@ class DeerLister
      */
     private function isFilePreviewable(string $filename): bool
     {
+        if ($this->config["preview_fallback"] === true)
+        {
+            return true;
+        }
+
         $ext = pathinfo($filename, PATHINFO_EXTENSION);
 
         foreach ($this->filePreviews as $preview)
@@ -374,6 +379,11 @@ class DeerLister
             {
                 return $preview->renderPreview($file, $ext, $this->twig);
             }
+        }
+
+        if ($this->config["preview_fallback"] === true)
+        {
+            return $this->twig->render("previews/default.html.twig");
         }
 
         http_response_code(404);
