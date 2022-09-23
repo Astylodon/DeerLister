@@ -20,7 +20,7 @@ spl_autoload_register(function($class) {
 
 $lister = new DeerLister();
 
-$lister->registerFileDisplay("audio", ImageDisplay::class);
+$lister->registerFileDisplay("audio", AudioDisplay::class);
 $lister->registerFileDisplay("image", ImageDisplay::class);
 
 $lister->registerFilePreview("audio", AudioPreview::class);

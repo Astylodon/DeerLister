@@ -5,7 +5,7 @@ require_once "FileDisplay.php";
 /**
  * Provides display for images
  */
-class ImageDisplay implements FileDisplay
+class AudioDisplay implements FileDisplay
 {
     public function doesHandle(string $ext): bool
     {
