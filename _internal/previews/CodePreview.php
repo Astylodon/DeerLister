@@ -22,6 +22,8 @@ class CodePreview implements FilePreview
             "php"
         ];
 
+    const SIZE_LIMIT = 1024 * 1024 * 2; // 2 MB
+
     private array $config;
 
     function __construct(array $config)
@@ -57,6 +59,26 @@ class CodePreview implements FilePreview
 
         $class = $extension;
 
-        return $twig->render("previews/code.html.twig", [ "code" => file_get_contents($path), "class" => $class ]);
+        // open file
+        $file = fopen($path, "r");
+        $size = filesize($path);
+
+        // check if file size exceeds preview limit
+        if ($size > self::SIZE_LIMIT)
+        {
+            $code = fread($file, self::SIZE_LIMIT);
+
+            // append (x.xx MB left) text at the end of the data
+            $left = round(($size - self::SIZE_LIMIT) / 1024 / 1024, 2);
+            $code .= PHP_EOL . "(" . $left . " MB left)";
+        }
+        else
+        {
+            $code = fread($file, $size);
+        }
+
+        fclose($file);
+
+        return $twig->render("previews/code.html.twig", [ "code" => $code, "class" => $class ]);
     }
 }
