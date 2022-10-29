@@ -158,3 +158,8 @@ img {
 video, audio {
     width: 100%;
 }
+
+.preview-title {
+    display: inline;
+    margin-right: 1em;
+}
