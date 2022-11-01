@@ -179,15 +179,23 @@ class DeerLister
 
         if (array_key_exists("forbidden", $config) && $config["forbidden"] !== NULL)
         {
-            $hidden = $config["forbidden"];
+            $forbidden = $config["forbidden"];
         }
         else
         {
-            $hidden = ["_internal", "vendor"];
+            $forbidden = ["_internal", "vendor"];
         }
         if (!$ignoreHide && array_key_exists("hidden", $config) && $config["hidden"] !== NULL)
         {
             $hidden = [...$hidden, ...$config["hidden"]];
+        }
+
+        foreach ($forbidden as $search)
+        {
+            if ($path === $search)
+            {
+                return true;
+            }
         }
 
         foreach ($hidden as $search)
