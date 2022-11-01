@@ -187,12 +187,12 @@ class DeerLister
         }
         if (!$ignoreHide && array_key_exists("hidden", $config) && $config["hidden"] !== NULL)
         {
-            $hidden = [...$hidden, ...$config["hidden"]];
+            $hidden = $config["hidden"];
         }
 
         foreach ($forbidden as $search)
         {
-            if ($path === $search)
+            if (strpos($path, $search) !== false)
             {
                 return true;
             }
@@ -200,7 +200,7 @@ class DeerLister
 
         foreach ($hidden as $search)
         {
-            if (strpos($path, $search) !== false)
+            if ($path === $search)
             {
                 return true;
             }
