@@ -370,8 +370,8 @@ class DeerLister
             return "File could not be previewed";
         }
 
-        // check if file is not hidden or forbidden
-        if ($this->isHidden($file))
+        // check if file is not forbidden
+        if ($this->isHidden($file, true))
         {
             http_response_code(404);
 
