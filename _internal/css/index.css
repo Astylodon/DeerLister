@@ -163,3 +163,7 @@ video, audio {
     display: inline;
     margin-right: 1em;
 }
+
+.preview-content {
+    margin: 1em 0;
+}
