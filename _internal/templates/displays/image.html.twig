@@ -13,7 +13,7 @@
                         {{ file.name }}
                     </p>
                 {% else %}
-                    <img src="{{ file | getFilePath(path.full) }}" alt=""/>
+                    <img loading="lazy" src="{{ file | getFilePath(path.full) }}" alt=""/>
                 {% endif %}
             </div>
         </a>
