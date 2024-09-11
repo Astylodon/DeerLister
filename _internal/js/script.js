@@ -54,4 +54,15 @@ function showFileModal(target, filename, content) {
     document.querySelector(".modal-body").innerHTML = ""
     document.querySelector(".modal-body").appendChild(clone)
     document.getElementById("modal").style.display = "block"
+
+    document.getElementById("share").addEventListener("click", _ => {
+        if (navigator.share)
+        {
+            navigator.share({url: target.href});
+        }
+        else
+        {
+            window.prompt("Copy to share", target.href)
+        }
+    })
 }
