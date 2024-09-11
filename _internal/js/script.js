@@ -26,7 +26,7 @@ function fileClicked(event) {
 
     // check if file is previewable
     if (file) {
-        event.preventDefault
+        event.preventDefault()
 
         showFile(target.href, file, filename, share)
     }
@@ -70,7 +70,7 @@ function showFileModal(href, filename, content, shareName) {
         const nodes = document.querySelectorAll(".path > a")
         const dir = nodes[nodes.length - 1]
         console.log(dir)
-        const url = `${window.location.origin}${window.location.pathname}${dir.href}&share=${shareName}`
+        const url = `${window.location.origin}${window.location.pathname}?dir=${dir.innerHTML}&share=${shareName}`
         if (navigator.share)
         {
             navigator.share({url: url});
