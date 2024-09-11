@@ -36,4 +36,4 @@ if (isset($_GET["preview"]))
     exit;
 }
 
-echo $lister->render($_GET["dir"] ?? "");
+echo $lister->render($_GET["dir"] ?? "", $_GET["share"] ?? "");

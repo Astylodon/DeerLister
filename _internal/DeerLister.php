@@ -35,7 +35,7 @@ class DeerLister
         // Convert a size in byte to something more diggest
         $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
             $units = ["B", "KB", "MB", "GB"];
-            for ($i = 0; $size > 1024; $i++) $size /= 1024;
+            for ($i = 0; $size > 1024 && $i < count($units); $i++) $size /= 1024;
 
             return round($size, 2) . $units[$i];
         }));
@@ -153,6 +153,7 @@ class DeerLister
             array_push($files,
                 [
                     "name" => $name,
+                    "share" => urlencode($name),
                     "isFolder" => $isFolder,
                     "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon($ext),
                     "lastModified" => $modified,
@@ -288,7 +289,7 @@ class DeerLister
         $this->fileDisplays[$name] = $instance;
     }
 
-    public function render(string $directory): string
+    public function render(string $directory, string $preview): string
     {
         // read the directory
         if (($files = $this->readDirectory($directory, $this->config)) === false)
@@ -331,6 +332,10 @@ class DeerLister
                 {
                     $title = $parsedown->getTitle();
                 }
+            }
+
+            if (urlencode($f["name"]) === $preview) {
+                $f["preview"] = true;
             }
 
             if (!$displayBack && $f["name"] === "..")
