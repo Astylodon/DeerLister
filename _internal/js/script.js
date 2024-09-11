@@ -12,35 +12,46 @@ document.querySelector(".modal").addEventListener("click", function(event) {
     event.currentTarget.style.display = "none"
 })
 
+const prev = document.getElementById("selected-preview")
+if (prev != undefined) {
+    showFile(prev.href, prev.dataset.preview, prev.dataset.filename, prev.dataset.share)
+}
+
 function fileClicked(event) {
     const target = event.currentTarget
 
     const file = target.dataset.preview
     const filename = target.dataset.filename
+    const share = target.dataset.share
 
     // check if file is previewable
     if (file) {
-        event.preventDefault()
+        event.preventDefault
 
-        // fetch file preview
-        fetch("/?preview=" + encodeURIComponent(file))
-            .then(response => {
-                if (!response.ok) {
-                    throw "Failed to preview file: " + response.statusText
-                }
-
-                return response.text()
-            })
-            .then(content => {
-                showFileModal(target, filename, content);
-                document.querySelectorAll('pre code').forEach((el) => {
-                    hljs.highlightElement(el);
-                });
-            })
+        showFile(target.href, file, filename, share)
     }
 }
 
-function showFileModal(target, filename, content) {
+function showFile(href, file, filename, shareName) {
+
+    // fetch file preview
+    fetch("/?preview=" + encodeURIComponent(file))
+        .then(response => {
+            if (!response.ok) {
+                throw "Failed to preview file: " + response.statusText
+            }
+
+            return response.text()
+        })
+        .then(content => {
+            showFileModal(href, filename, content, shareName);
+            document.querySelectorAll('pre code').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+        })
+}
+
+function showFileModal(href, filename, content, shareName) {
     // clone template
     const clone = template.content.cloneNode(true)
 
@@ -48,7 +59,7 @@ function showFileModal(target, filename, content) {
     clone.querySelector("h2").innerText = filename
     clone.querySelector("div").innerHTML = content
     
-    clone.querySelector("a").href = target.href
+    clone.querySelector("a").href = href
     
     // add into modal and show it
     document.querySelector(".modal-body").innerHTML = ""
@@ -56,13 +67,17 @@ function showFileModal(target, filename, content) {
     document.getElementById("modal").style.display = "block"
 
     document.getElementById("share").addEventListener("click", _ => {
+        const nodes = document.querySelectorAll(".path > a")
+        const dir = nodes[nodes.length - 1]
+        console.log(dir)
+        const url = `${window.location.origin}${window.location.pathname}${dir.href}&share=${shareName}`
         if (navigator.share)
         {
-            navigator.share({url: target.href});
+            navigator.share({url: url});
         }
         else
         {
-            window.prompt("Copy to share", target.href)
+            window.prompt("Copy to share", url)
         }
     })
 }
