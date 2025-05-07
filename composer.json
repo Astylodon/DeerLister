@@ -4,6 +4,7 @@
     "license": "MIT",
     "require": {
         "twig/twig": "^3.0",
-        "erusev/parsedown": "^1.7"
+        "erusev/parsedown": "^1.7",
+        "yosymfony/toml": "^1.0"
     }
 }

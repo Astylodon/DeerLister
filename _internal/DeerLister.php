@@ -6,6 +6,7 @@ require_once "ParsedownExtension.php";
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\TwigFilter;
+use Yosymfony\Toml\Toml;
 
 class DeerLister
 {
@@ -27,9 +28,9 @@ class DeerLister
         $this->twig = new Environment($loader);
 
         // load config
-        if (in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml"))
+        if (file_exists("_internal/config.toml"))
         {
-            $this->config = yaml_parse(file_get_contents("_internal/config.yaml"));
+            $this->config = Toml::Parse(file_get_contents("_internal/config.toml"));
         }
 
         // Convert a size in byte to something more diggest

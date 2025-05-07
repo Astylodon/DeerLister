@@ -1,18 +1,8 @@
 ## Prevent user to see and access files and folder
-forbidden:
-  - _internal
-  - vendor
+forbidden: [ _internal, vendor ]
 
 ## Hide a folder from the user but doesn't prevent access
-hidden:
-
-## List of enabled file previews
-enabled_previews:
-  - image
-  - video
-  - code
-  - audio
-  - markdown
+hidden: []
 
 ## If true, clicking a file that can't be previewed will display a message saying so instead of downloading it
 preview_fallback: true
@@ -20,11 +10,16 @@ preview_fallback: true
 ## Do we preview the README if one is present
 enabled_readme: true
 
+[previews]
+
+## List of enabled file previews
+enabled: [ image, video, code, audio, markdown ]
+
 ## Settings for specific file previews
-previews:
-  code:
-    ## Enables code preview for files that might be considered unsafe such as .php
-    unsafe: false
+[previews.code]
+
+## Enables code preview for files that might be considered unsafe such as .php
+unsafe: false
 
 displays:
 ## Choose how the content of a folder is displayed
