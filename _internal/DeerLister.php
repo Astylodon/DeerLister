@@ -266,7 +266,7 @@ class DeerLister
     public function registerFilePreview(string $name, string $preview)
     {
         // check if preview is enabled
-        if (isset($this->config["enabled_previews"]) && !in_array($name, $this->config["enabled_previews"]))
+        if (isset($this->config["previews"]) && isset($this->config["previews"]["enabled"]) && !in_array($name, $this->config["previews"]["enabled"]))
         {
             return;
         }
