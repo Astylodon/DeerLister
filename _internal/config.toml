@@ -21,10 +21,10 @@ enabled = [ "image", "video", "code", "audio", "markdown" ]
 ## Enables code preview for files that might be considered unsafe such as .php
 unsafe = false
 
-[displays]
 ## Choose how the content of a folder is displayed
 ## Example:
-## "path/to/folder":
-##  format: image ## Possible values: none, image
-##  displayOthers: false ## If format not none, do we display the files that can't be previewed
-##  displayBack: false ## Do we display the "back" folder
+## [[displays]]
+## path = "path/to/folder"
+## format = "image"
+## displayOthers = false ## If format not none, do we display the files that can't be previewed
+## displayBack = false ## Do we display the "back" folder

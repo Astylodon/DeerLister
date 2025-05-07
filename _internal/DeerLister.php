@@ -310,12 +310,18 @@ class DeerLister
         $displayOthers = true;
 
         // Check the config to set the display mode and others options set
-        if (isset($this->config["displays"]) && array_key_exists($path, $this->config["displays"]) && array_key_exists($this->config["displays"][$path]["format"], $this->fileDisplays))
+        if (isset($this->config["displays"]))
         {
-            $curr = $this->config["displays"][$path];
-            $displayMode = $curr["format"];
-            $displayBack = $curr["displayBack"];
-            $displayOthers = $curr["displayOthers"];
+            $curr = null;
+            foreach ($this->config["displays"] as $elem) {
+                if ($elem["path"] === $path && array_key_exists($elem["format"], $this->fileDisplays)) {
+                    $displayMode = $elem["format"];
+                    $displayBack = $elem["displayBack"] ?? false;
+                    $displayOthers = $elem["displayOthers"] ?? false;
+                    var_dump($displayOthers);
+                    break;
+                }
+            }
         }
 
         foreach ($files as $f)
