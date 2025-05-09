@@ -313,12 +313,12 @@ class DeerLister
         if (isset($this->config["displays"]))
         {
             $curr = null;
-            foreach ($this->config["displays"] as $elem) {
+            foreach ($this->config["displays"] as $elem)
+            {
                 if ($elem["path"] === $path && array_key_exists($elem["format"], $this->fileDisplays)) {
                     $displayMode = $elem["format"];
                     $displayBack = $elem["displayBack"] ?? false;
                     $displayOthers = $elem["displayOthers"] ?? false;
-                    var_dump($displayOthers);
                     break;
                 }
             }
