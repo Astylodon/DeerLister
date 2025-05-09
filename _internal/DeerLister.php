@@ -36,7 +36,7 @@ class DeerLister
         // Convert a size in byte to something more diggest
         $this->twig->addFilter(new TwigFilter("humanFileSize", function($size) {
             $units = ["B", "KB", "MB", "GB"];
-            for ($i = 0; $size > 1024; $i++) $size /= 1024;
+            for ($i = 0; $size > 1024 && $i < count($units); $i++) $size /= 1024;
 
             return round($size, 2) . $units[$i];
         }));
