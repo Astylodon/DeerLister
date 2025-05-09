@@ -51,6 +51,7 @@ function showFileModal(target, filename, content) {
     clone.querySelector("a").href = target.href
     
     // add into modal and show it
-    document.querySelector(".modal-body").innerHTML = clone
+    document.querySelector(".modal-body").innerHTML = ""
+    document.querySelector(".modal-body").appendChild(clone)
     document.getElementById("modal").style.display = "block"
 }
