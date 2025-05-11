@@ -342,6 +342,7 @@ class DeerLister
 
             if (urlencode($f["name"]) === $preview)
             {
+                $title = $f["name"];
                 $f["preview"] = true;
             }
 
