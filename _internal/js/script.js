@@ -14,7 +14,7 @@ document.querySelector(".modal").addEventListener("click", function(event) {
 
 const prev = document.getElementById("selected-preview")
 if (prev != undefined) {
-    showFile(prev.href, prev.dataset.preview, prev.dataset.filename, prev.dataset.share)
+    showFile(prev.href, prev.dataset.preview, prev.dataset.filename, encodeURI(prev.dataset.filename))
 }
 
 function fileClicked(event) {
@@ -22,7 +22,7 @@ function fileClicked(event) {
 
     const file = target.dataset.preview
     const filename = target.dataset.filename
-    const share = target.dataset.share
+    const share = encodeURI(filename)
 
     // check if file is previewable
     if (file) {
