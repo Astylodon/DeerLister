@@ -67,9 +67,9 @@ function showFileModal(href, filename, content, shareName) {
     document.getElementById("modal").style.display = "block"
 
     document.getElementById("share").addEventListener("click", _ => {
-        const nodes = document.querySelectorAll(".path > a")
-        const dir = nodes[nodes.length - 1]
-        const url = `${window.location.origin}${window.location.pathname}?dir=${dir.innerHTML}&share=${shareName}`
+        let params = new URLSearchParams(document.location.search)
+        let dir = params.get("dir")
+        const url = `${window.location.origin}${window.location.pathname}?${dir === null ? "" : `dir=${dir}&`}share=${shareName}`
         if (navigator.share)
         {
             navigator.share({url: url});
