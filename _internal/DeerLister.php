@@ -6,6 +6,7 @@ require_once "ParsedownExtension.php";
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\TwigFilter;
+use Yosymfony\Toml\Toml;
 
 class DeerLister
 {
@@ -27,9 +28,9 @@ class DeerLister
         $this->twig = new Environment($loader);
 
         // load config
-        if (in_array("yaml", get_loaded_extensions()) && file_exists("_internal/config.yaml"))
+        if (file_exists("_internal/config.toml"))
         {
-            $this->config = yaml_parse(file_get_contents("_internal/config.yaml"));
+            $this->config = Toml::Parse(file_get_contents("_internal/config.toml"));
         }
 
         // Convert a size in byte to something more diggest
@@ -266,7 +267,7 @@ class DeerLister
     public function registerFilePreview(string $name, string $preview)
     {
         // check if preview is enabled
-        if (isset($this->config["enabled_previews"]) && !in_array($name, $this->config["enabled_previews"]))
+        if (isset($this->config["previews"]) && isset($this->config["previews"]["enabled"]) && !in_array($name, $this->config["previews"]["enabled"]))
         {
             return;
         }
@@ -310,12 +311,18 @@ class DeerLister
         $displayOthers = true;
 
         // Check the config to set the display mode and others options set
-        if (isset($this->config["displays"]) && array_key_exists($path, $this->config["displays"]) && array_key_exists($this->config["displays"][$path]["format"], $this->fileDisplays))
+        if (isset($this->config["displays"]))
         {
-            $curr = $this->config["displays"][$path];
-            $displayMode = $curr["format"];
-            $displayBack = $curr["displayBack"];
-            $displayOthers = $curr["displayOthers"];
+            foreach ($this->config["displays"] as $elem)
+            {
+                if ($elem["path"] === $path && array_key_exists($elem["format"], $this->fileDisplays))
+                {
+                    $displayMode = $elem["format"];
+                    $displayBack = $elem["displayBack"] ?? false;
+                    $displayOthers = $elem["displayOthers"] ?? false;
+                    break;
+                }
+            }
         }
 
         foreach ($files as $f)
