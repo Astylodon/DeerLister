@@ -1,6 +1,6 @@
 <div class="display-image-flex-container">
     {% for file in files %}
-        <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}" {%if file.filePreview %} data-preview="{{ file.filePreview }}" {% endif %}>
+        <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}" {%if file.filePreview %} data-preview="{{ file.filePreview }}" {% endif %} {% if file.preview %} id="selected-preview" {% endif %}>
             <div class="display-image">
                 {%if file.name == ".." %}
                     <i class="fa-solid fa-arrow-left"></i>

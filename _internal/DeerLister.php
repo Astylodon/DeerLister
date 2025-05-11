@@ -289,7 +289,7 @@ class DeerLister
         $this->fileDisplays[$name] = $instance;
     }
 
-    public function render(string $directory): string
+    public function render(string $directory, string $preview): string
     {
         // read the directory
         if (($files = $this->readDirectory($directory, $this->config)) === false)
@@ -338,6 +338,12 @@ class DeerLister
                 {
                     $title = $parsedown->getTitle();
                 }
+            }
+
+            if ($f["name"] === $preview)
+            {
+                $title = $f["name"];
+                $f["preview"] = true;
             }
 
             if (!$displayBack && $f["name"] === "..")

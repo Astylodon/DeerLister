@@ -7,10 +7,13 @@
     </div>
     {% for file in files %}
         <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}"
-            {%if file.extension | canBeDisplayed(displayName) %}
+            {% if file.extension | canBeDisplayed(displayName) %}
             class="audio-preview"
-            {%elseif file.filePreview %}
+            {% elseif file.filePreview %}
             data-preview="{{ file.filePreview }}"
+            {% endif %}
+            {% if file.preview %}
+            id="selected-preview"
             {% endif %}
         >
             <div class="file-info">
