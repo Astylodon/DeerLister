@@ -154,7 +154,6 @@ class DeerLister
             array_push($files,
                 [
                     "name" => $name,
-                    "share" => urlencode($name),
                     "isFolder" => $isFolder,
                     "icon" => $isFolder ? Icons::getFolderIcon() : Icons::getIcon($ext),
                     "lastModified" => $modified,
@@ -341,7 +340,8 @@ class DeerLister
                 }
             }
 
-            if (urlencode($f["name"]) === $preview) {
+            if (urlencode($f["name"]) === $preview)
+            {
                 $f["preview"] = true;
             }
 
