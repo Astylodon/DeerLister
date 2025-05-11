@@ -69,12 +69,20 @@ body {
 }
 
 @media (max-width: 750px) {
+    .file-info .name {
+        width: calc(100% - 30px);
+    }
+
     .file-info .last-modified {
         display: none;
     }
 }
 
 @media (max-width: 500px) {
+    .file-info .name {
+        width: calc(100% - 110px - 30px);
+    }
+
     .file-info .size {
         display: none;
     }
@@ -91,6 +99,9 @@ body {
 
 .file-info .name {
     flex: auto;
+    width: calc(100% - 110px - 30px - 250px);
+    overflow-x: clip;
+    text-wrap: nowrap;
 }
 
 .file-info .size {
