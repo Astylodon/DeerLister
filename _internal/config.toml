@@ -13,7 +13,7 @@ enabled_readme = true
 [previews]
 
 ## List of enabled file previews
-enabled = [ "image", "video", "code", "audio", "markdown" ]
+enabled = [ "image", "video", "code", "audio", "markdown", "pdf" ]
 
 ## Settings for specific file previews
 [previews.code]

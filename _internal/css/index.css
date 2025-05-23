@@ -183,3 +183,7 @@ video, audio {
 .preview-content {
     margin: 1em 0;
 }
+
+object {
+    height: 80dvh;
+}
