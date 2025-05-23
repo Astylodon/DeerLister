@@ -28,6 +28,7 @@ $lister->registerFilePreview("image", ImagePreview::class);
 $lister->registerFilePreview("video", VideoPreview::class);
 $lister->registerFilePreview("code", CodePreview::class);
 $lister->registerFilePreview("markdown", MarkdownPreview::class);
+$lister->registerFilePreview("pdf", PdfPreview::class);
 
 if (isset($_GET["preview"]))
 {
