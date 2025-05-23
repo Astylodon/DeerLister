@@ -3,7 +3,7 @@
 require_once "FilePreview.php";
 
 /**
- * Provides previews for audios
+ * Provides previews for PDF
  */
 class PdfPreview implements FilePreview
 {
