@@ -175,6 +175,8 @@ video, audio {
     width: 100%;
 }
 
+/* Preview popup */
+
 .preview-title {
     display: inline;
     margin-right: 1em;
@@ -183,6 +185,14 @@ video, audio {
 .preview-content {
     margin: 1em 0;
 }
+
+@media (max-width: 1000px) {
+    .modal-body {
+        width: 100%;
+    }
+}
+
+/* PDF preview */
 
 object {
     height: 80dvh;
