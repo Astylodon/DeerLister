@@ -1,5 +1,7 @@
 <?php
 
+namespace DeerLister;
+
 class Icons
 {
     private static $brands =

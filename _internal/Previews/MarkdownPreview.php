@@ -1,6 +1,9 @@
 <?php
 
-require_once "FilePreview.php";
+namespace DeerLister\Previews;
+
+use DeerLister\ParsedownExtension;
+use Twig\Environment;
 
 /**
  * Provides previews for markdown
@@ -12,7 +15,7 @@ class MarkdownPreview implements FilePreview
         return in_array($ext, ["md"]);
     }
 
-    public function renderPreview(string $path, string $extension, Twig\Environment $twig): string
+    public function renderPreview(string $path, string $extension, Environment $twig): string
     {
         $parsedown = new ParsedownExtension();
         $parsedown->setSafeMode(true);

@@ -1,5 +1,7 @@
 <?php
 
+namespace DeerLister\Displays;
+
 interface FileDisplay
 {
     /**

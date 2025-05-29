@@ -1,5 +1,9 @@
 <?php
 
+namespace DeerLister\Previews;
+
+use Twig\Environment;
+
 interface FilePreview
 {
     /**
@@ -17,9 +21,9 @@ interface FilePreview
      * 
      * @param string $path The relative path to the file
      * @param string $extension The file extension without leading dot
-     * @param Twig\Environment $twig Instance of twig which can be used to render the file preview
+     * @param Environment $twig Instance of twig which can be used to render the file preview
      * 
      * @return string The file preview content
      */
-    public function renderPreview(string $path, string $extension, Twig\Environment $twig): string;
+    public function renderPreview(string $path, string $extension, Environment $twig): string;
 }

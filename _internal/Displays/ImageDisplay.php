@@ -1,6 +1,6 @@
 <?php
 
-require_once "FileDisplay.php";
+namespace DeerLister\Displays;
 
 /**
  * Provides display for images
