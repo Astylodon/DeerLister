@@ -1,7 +1,6 @@
 <?php
 
-require_once "Icons.php";
-require_once "ParsedownExtension.php";
+namespace DeerLister;
 
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;

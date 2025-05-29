@@ -1,22 +1,16 @@
 <?php
 
+use DeerLister\DeerLister;
+use DeerLister\Displays\AudioDisplay;
+use DeerLister\Displays\ImageDisplay;
+use DeerLister\Previews\AudioPreview;
+use DeerLister\Previews\CodePreview;
+use DeerLister\Previews\ImagePreview;
+use DeerLister\Previews\MarkdownPreview;
+use DeerLister\Previews\PdfPreview;
+use DeerLister\Previews\VideoPreview;
+
 require_once "vendor/autoload.php";
-require_once "_internal/DeerLister.php";
-
-// autoload previews
-spl_autoload_register(function($class) {
-    $filePreview = "_internal/previews/" . $class . ".php";
-    $fileDisplay = "_internal/displays/" . $class . ".php";
-
-    if (file_exists($filePreview))
-    {
-        include $filePreview;
-    }
-    else if (file_exists($fileDisplay))
-    {
-        include $fileDisplay;
-    }
-});
 
 $lister = new DeerLister();
 

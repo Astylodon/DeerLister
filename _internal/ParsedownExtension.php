@@ -1,5 +1,9 @@
 <?php
 
+namespace DeerLister;
+
+use Parsedown;
+
 class ParsedownExtension extends Parsedown
 {
     private $title = null;
