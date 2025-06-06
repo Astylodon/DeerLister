@@ -2,6 +2,7 @@
 
 namespace DeerLister;
 
+use DeerLister\Previews\ImagePreview;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\TwigFilter;
@@ -302,6 +303,7 @@ class DeerLister
         $path = $this->getRelativePath($directory);
 
         $title = $path == "" ? "Home" : basename($directory);
+        $imgPreview = null;
         $readme = null;
         $filesFilter = [];
         $displayMode = null;
@@ -343,6 +345,10 @@ class DeerLister
             {
                 $title = $f["name"];
                 $f["preview"] = true;
+
+                if ((new ImagePreview())->doesHandle($f["name"], $f["extension"])) {
+                    $imgPreview = $f["name"];
+                }
             }
 
             if (!$displayBack && $f["name"] === "..")
@@ -357,8 +363,10 @@ class DeerLister
 
         return $this->twig->render("index.html.twig",
             [
+                "baseUrl" => "https://$_SERVER[HTTP_HOST]",
                 "files" => $filesFilter,
                 "title" => $title,
+                "imgPreview" => $imgPreview,
                 "path" => [ "full" => $path, "exploded" => array_filter(explode("/", $path)) ],
                 "readme" => $readme,
                 "display" => "displays/" . ($displayMode ?? "normal") . ".html.twig",

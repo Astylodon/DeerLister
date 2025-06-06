@@ -5,6 +5,9 @@
         <title>{{ title }}</title>
 
         <meta property="og:title" content="{{ title }}">
+        {% if imgPreview is not null %}
+        <meta property="og:image" content="{{ baseUrl }}/{{ path.full }}/{{ imgPreview }}">
+        {% endif %}
         <meta name="theme-color" content="#4169e1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
