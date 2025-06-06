@@ -13,6 +13,7 @@ document.querySelector(".modal").addEventListener("click", function(event) {
     document.querySelector(".modal-body").innerHTML = ""
     event.currentTarget.style.display = "none"
 
+    // Update state with URL
     let url = new URL(document.location.href)
     let dirParam = url.searchParams.get("dir")
     let finalUrl = document.location.origin + document.location.pathname;
@@ -23,13 +24,19 @@ document.querySelector(".modal").addEventListener("click", function(event) {
     } else {
         document.title = "Home"
     }
-    window.history.pushState({"html": document.html,"pageTitle": document.title},"", finalUrl)
+    window.history.pushState({"target": null, "pageTitle": document.title},"", finalUrl)
 })
 
 window.addEventListener("popstate", (e) => {
     if(e.state) {
-        console.log(e.state);
-        document.getElementById("content").innerHTML = e.state.html;
+        if (e.state.target) {
+            const file = document.querySelector(`[data-preview="${e.state.target}"]`)
+            showFile(file.href, file.dataset.preview, file.dataset.filename, encodeURI(file.dataset.filename))
+        } else {
+            document.querySelector(".modal-body").innerHTML = ""
+            document.querySelector(".modal").style.display = "none"
+        }
+
         document.title = e.state.pageTitle;
     }
 });
@@ -92,8 +99,9 @@ function showFileModal(href, filename, content, shareName) {
     shareParams.set("share", shareName)
     const shareUrl = `${window.location.origin}${window.location.pathname}?${shareParams.toString()}`
 
+    // Update state with URL
     document.title = filename
-    window.history.pushState({"html": document.html,"pageTitle": filename},"", shareUrl)
+    window.history.pushState({"target": filename, "pageTitle": filename},"", shareUrl)
 
     document.getElementById("share").addEventListener("click", _ => {
         if (navigator.share)
