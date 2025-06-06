@@ -1,6 +1,4 @@
 const template = document.getElementById("filepreview")
-const baseTitle = document.title;
-const baseUrl = document.location.href;
 
 // register a click handler for each file link
 document.querySelectorAll("#file-display a").forEach(link => link.addEventListener("click", fileClicked))
