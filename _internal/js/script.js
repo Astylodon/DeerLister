@@ -1,4 +1,6 @@
 const template = document.getElementById("filepreview")
+const baseTitle = document.title;
+const baseUrl = document.location.href;
 
 // register a click handler for each file link
 document.querySelectorAll("#file-display a").forEach(link => link.addEventListener("click", fileClicked))
@@ -10,7 +12,27 @@ document.querySelector(".modal-body").addEventListener("click", event => event.s
 document.querySelector(".modal").addEventListener("click", function(event) {
     document.querySelector(".modal-body").innerHTML = ""
     event.currentTarget.style.display = "none"
+
+    let url = new URL(document.location.href)
+    let dirParam = url.searchParams.get("dir")
+    let finalUrl = document.location.origin + document.location.pathname;
+    if (dirParam) {
+        const split = dirParam.split('/')
+        document.title = split[split.length - 1]
+        finalUrl += `?dir=${dirParam}`
+    } else {
+        document.title = "Home"
+    }
+    window.history.pushState({"html": document.html,"pageTitle": document.title},"", finalUrl)
 })
+
+window.addEventListener("popstate", (e) => {
+    if(e.state) {
+        console.log(e.state);
+        document.getElementById("content").innerHTML = e.state.html;
+        document.title = e.state.pageTitle;
+    }
+});
 
 const prev = document.getElementById("selected-preview")
 if (prev != undefined) {
@@ -66,17 +88,21 @@ function showFileModal(href, filename, content, shareName) {
     document.querySelector(".modal-body").appendChild(clone)
     document.getElementById("modal").style.display = "block"
 
+    let shareParams = new URLSearchParams(document.location.search)
+    shareParams.set("share", shareName)
+    const shareUrl = `${window.location.origin}${window.location.pathname}?${shareParams.toString()}`
+
+    document.title = filename
+    window.history.pushState({"html": document.html,"pageTitle": filename},"", shareUrl)
+
     document.getElementById("share").addEventListener("click", _ => {
-        let params = new URLSearchParams(document.location.search)
-        params.set("share", shareName)
-        const url = `${window.location.origin}${window.location.pathname}?${params.toString()}`
         if (navigator.share)
         {
-            navigator.share({url: url});
+            navigator.share({url: shareUrl});
         }
         else
         {
-            window.prompt("Copy to share", url)
+            window.prompt("Copy to share", shareUrl)
         }
     })
 }
