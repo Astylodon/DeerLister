@@ -347,7 +347,7 @@ class DeerLister
                 $title = $f["name"];
                 $f["preview"] = true;
 
-                if ((new ImagePreview())->doesHandle($f["name"], $f["extension"]))
+                if (in_array($f["extension"], ExtensionHelper::getImageExtensions()))
                 {
                     $imgPreview = $f["name"];
                 }
@@ -355,7 +355,7 @@ class DeerLister
 
             if (!$displayBack && $f["name"] === "..")
             { }
-            else if (!$displayOthers && isset($displayMode) && !in_array($f["extension"], ExtensionHelper::getImageExtensions()))
+            else if (!$displayOthers && isset($displayMode) && !$this->fileDisplays[$displayMode]->doesHandle($f["extension"]))
             { }
             else
             {
