@@ -2,6 +2,7 @@
 
 namespace DeerLister;
 
+use DeerLister\ExtensionHelper;
 use DeerLister\Previews\ImagePreview;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
@@ -354,7 +355,7 @@ class DeerLister
 
             if (!$displayBack && $f["name"] === "..")
             { }
-            else if (!$displayOthers && isset($displayMode) && !$this->fileDisplays[$displayMode]->doesHandle($f["extension"]))
+            else if (!$displayOthers && isset($displayMode) && !in_array($f["extension"], ExtensionHelper::getImageExtensions()))
             { }
             else
             {
