@@ -346,7 +346,8 @@ class DeerLister
                 $title = $f["name"];
                 $f["preview"] = true;
 
-                if ((new ImagePreview())->doesHandle($f["name"], $f["extension"])) {
+                if ((new ImagePreview())->doesHandle($f["name"], $f["extension"]))
+                {
                     $imgPreview = $f["name"];
                 }
             }
@@ -361,9 +362,10 @@ class DeerLister
             }
         }
 
+        $protocol = (empty($_SERVER['HTTPS']) ? 'http' : 'https');
         return $this->twig->render("index.html.twig",
             [
-                "baseUrl" => "https://$_SERVER[HTTP_HOST]",
+                "baseUrl" => "$protocol://$_SERVER[HTTP_HOST]",
                 "files" => $filesFilter,
                 "title" => $title,
                 "imgPreview" => $imgPreview,
