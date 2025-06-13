@@ -22,7 +22,7 @@ document.querySelector(".modal").addEventListener("click", function(event) {
     } else {
         document.title = "Home"
     }
-    window.history.pushState({"target": null, "pageTitle": document.title},"", finalUrl)
+    window.history.pushState({target: null, pageTitle: document.title}, "", finalUrl)
 })
 
 window.addEventListener("popstate", (e) => {
@@ -99,7 +99,7 @@ function showFileModal(href, filename, content, shareName) {
 
     // Update state with URL
     document.title = filename
-    window.history.pushState({"target": filename, "pageTitle": filename},"", shareUrl)
+    window.history.pushState({target: filename, pageTitle: filename}, "", shareUrl)
 
     document.getElementById("share").addEventListener("click", _ => {
         if (navigator.share)
