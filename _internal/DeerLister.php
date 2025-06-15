@@ -29,9 +29,9 @@ class DeerLister
         $this->twig = new Environment($loader);
 
         // load config
-        if (file_exists("_internal/config.toml"))
+        if (file_exists("config.toml"))
         {
-            $this->config = Toml::Parse(file_get_contents("_internal/config.toml"));
+            $this->config = Toml::Parse(file_get_contents("config.toml"));
         }
 
         // Convert a size in byte to something more diggest
