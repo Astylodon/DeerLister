@@ -1,5 +1,5 @@
 ## Prevent user to see and access files and folder
-forbidden = [ "_internal", "vendor" ]
+forbidden = [ "_internal", "vendor", "config.toml" ]
 
 ## Hide a folder from the user but doesn't prevent access
 hidden = []
