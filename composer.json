@@ -3,6 +3,7 @@
     "description": "PHP directory lister 🦌",
     "license": "MIT",
     "require": {
+        "php": ">=8.3",
         "twig/twig": "^3.0",
         "erusev/parsedown": "^1.7",
         "yosymfony/toml": "^1.0"
