@@ -3,11 +3,10 @@
 namespace DeerLister;
 
 use DeerLister\ExtensionHelper;
-use DeerLister\Previews\ImagePreview;
+use Devium\Toml\Toml;
 use Twig\Loader\FilesystemLoader;
 use Twig\Environment;
 use Twig\TwigFilter;
-use Yosymfony\Toml\Toml;
 
 class DeerLister
 {
@@ -31,7 +30,7 @@ class DeerLister
         // load config
         if (file_exists("config.toml"))
         {
-            $this->config = Toml::Parse(file_get_contents("config.toml"));
+            $this->config = Toml::decode(file_get_contents("config.toml"), true);
         }
 
         // Convert a size in byte to something more diggest
