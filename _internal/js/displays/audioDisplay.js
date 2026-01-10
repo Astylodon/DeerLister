@@ -46,7 +46,11 @@ let shareParams = new URLSearchParams(document.location.search)
 let share = shareParams.get("share")
 if (share) {
     for (let i = 0; i < songs.length; i++) {
-        audioIndex = i;
-        playSong(audioIndex, false);
+
+        if (songs[i].dataset.filename === decodeURI(share)) {
+            audioIndex = i;
+            playSong(audioIndex, false);
+            break;
+        }
     }
 }

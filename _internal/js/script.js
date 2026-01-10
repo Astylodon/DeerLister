@@ -109,12 +109,6 @@ function showFileModal(href, filename, content, shareName) {
     })
 }
 
-document.onreadystatechange = async function () {
-    if (document.readyState == "interactive") {
-        init();
-    }
-};
-
 function createShareUrl(shareName) {
 
     let shareParams = new URLSearchParams(document.location.search)
@@ -133,3 +127,5 @@ function showShare(shareUrl)
         window.prompt("Copy to share", shareUrl)
     }
 }
+
+init();
