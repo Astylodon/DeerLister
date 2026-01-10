@@ -30,3 +30,20 @@
 .display-image p {
     color: black;
 }
+
+.button {
+    margin: 2px;
+    width: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.buttons {
+    display: flex;
+    background-color: lightgray !important;
+}
+
+.flex-container span.folder-element:not(:hover) .buttons {
+    visibility: hidden;
+}

@@ -16,12 +16,13 @@
     color: white;
 }
 
-.flex-container a:nth-child(odd) {
+.flex-container a:nth-child(odd), .flex-container span:nth-child(odd) {
     background-color: lightblue;
 }
 
-.flex-container a:hover {
+.flex-container a:hover, .flex-container span.folder-element:hover {
     background-color: lightgray;
+    cursor: pointer;
 }
 
 .modal-body {
