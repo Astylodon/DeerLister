@@ -13,7 +13,7 @@ class ParsedownExtension extends Parsedown
     {
         $block = Parsedown::blockHeader($line);
 
-        $level = (integer)trim($block['element']['name'], 'h');
+        $level = (int)trim($block['element']['name'], 'h');
         if ($level < $this->currLevel)
         {
             $this->title = $block['element']['text'];

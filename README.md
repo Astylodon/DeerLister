@@ -2,14 +2,14 @@
 PHP directory lister 🦌
 
 ## Requirements
-PHP >= 8.0
+PHP >= 8.3
 
 ## Features
- - Lightweight and easy to use
- - Highly configurable
- - README integration
- - File preview
- - Custom displays
+- Lightweight and easy to use
+- Highly configurable
+- README integration
+- File preview
+- Custom displays
 
 ## License
 
