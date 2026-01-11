@@ -1,4 +1,4 @@
-<div class="flex-container">
+<div class="flex-container overrides-share">
     <h3 id="audio-title"></h3>
     <audio controls id="audio-player"></audio>
     <div class="file-info header">
@@ -6,10 +6,9 @@
         <div class="name">Name</div>
     </div>
     {% for file in files %}
-        <a href="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}"
-            {% if file.extension | canBeDisplayed(displayName) %}
-            class="audio-preview"
-            {% elseif file.filePreview %}
+        <span data-song="{{ file | getFilePath(path.full) }}" data-filename="{{ file.name }}"
+            class="folder-element {% if file.extension | canBeDisplayed(displayName) %}audio-preview{% endif %}"
+            {% if file.filePreview %}
             data-preview="{{ file.filePreview }}"
             {% endif %}
             {% if file.preview %}
@@ -25,8 +24,13 @@
                     {% endif %}
                 </div>
                 <div class="name">{{ file.name }}</div>
+
+                <span class="buttons">
+                    <a class="button download" download href="{{ file | getFilePath(path.full) }}"><i class="fa-solid fa-download"></i></a>
+                    <a class="button share"><i class="fa-solid fa-share-nodes"></i></a>
+                </span>
             </div>
-        </a>
+        </span>
     {% endfor %}
 </div>
 <script src="_internal/js/displays/audioDisplay.js"></script>
