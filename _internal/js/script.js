@@ -1,7 +1,7 @@
-function init() {
-    if (!document.querySelector("overrides-share")) return
+const template = document.getElementById("filepreview")
 
-    const template = document.getElementById("filepreview")
+function init() {
+    if (document.querySelector(".overrides-share")) return
 
     // register a click handler for each file link
     document.querySelectorAll("#file-display a").forEach(link => link.addEventListener("click", fileClicked))
