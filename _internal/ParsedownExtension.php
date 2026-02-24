@@ -16,7 +16,7 @@ class ParsedownExtension extends Parsedown
         $level = (int)trim($block['element']['name'], 'h');
         if ($level < $this->currLevel)
         {
-            $this->title = $block['element']['text'];
+            $this->title = $block['element']['handler']['argument'];
             $this->currLevel = $level;
         }
 
